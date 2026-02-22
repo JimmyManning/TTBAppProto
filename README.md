@@ -1,11 +1,11 @@
-# Alcohol Label Verification
+# Alcohol Label Verification Prototype
 
 [![CI](https://github.com/YOUR_GITHUB_USERNAME/TBBAppProto/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_GITHUB_USERNAME/TBBAppProto/actions/workflows/ci.yml)
 [![Azure Deploy](https://github.com/YOUR_GITHUB_USERNAME/TBBAppProto/actions/workflows/deploy-azure.yml/badge.svg)](https://github.com/YOUR_GITHUB_USERNAME/TBBAppProto/actions/workflows/deploy-azure.yml)
 
 > Replace `YOUR_GITHUB_USERNAME/TBBAppProto` with your actual repository path.
 
-Flask application for OCR-assisted alcohol label verification.
+Standalone Flask prototype for OCR-assisted alcohol label verification.
 
 ## What it does
 
@@ -130,3 +130,14 @@ If Tesseract is unavailable, OCR endpoints return HTTP `503`.
 
 - CI workflow: [.github/workflows/ci.yml](.github/workflows/ci.yml)
 - Azure deployment workflow: [.github/workflows/deploy-azure.yml](.github/workflows/deploy-azure.yml)
+
+## Known Issues
+- Many requirments from TBB are upheld
+- OCR is not great at detecting text in images especailly the goverment warning
+- APIs are not encrypted
+
+## Improvements
+- Integrating custom tensorflow model could improve OCR accuracy and speed.
+- Autehtication and privlege management and integration into user manamegent server.
+- MCP server to pull requirments from TBB database would allow independant agents to implement and validate complete requirments. 
+- Client facing app to validate before submitting could help breweries / distileries make sure their labels follow the requirments. 
