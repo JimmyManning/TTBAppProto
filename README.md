@@ -1,9 +1,7 @@
 # Alcohol Label Verification Prototype
 
-[![CI](https://github.com/YOUR_GITHUB_USERNAME/TBBAppProto/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_GITHUB_USERNAME/TBBAppProto/actions/workflows/ci.yml)
-[![Azure Deploy](https://github.com/YOUR_GITHUB_USERNAME/TBBAppProto/actions/workflows/deploy-azure.yml/badge.svg)](https://github.com/YOUR_GITHUB_USERNAME/TBBAppProto/actions/workflows/deploy-azure.yml)
-
-> Replace `YOUR_GITHUB_USERNAME/TBBAppProto` with your actual repository path.
+[![CI](https://github.com/JimmyManning/TBBAppProto/actions/workflows/ci.yml/badge.svg)](https://github.com/JimmyManning/TBBAppProto/actions/workflows/ci.yml)
+[![Azure Deploy](https://github.com/JimmyManning/TBBAppProto/actions/workflows/deploy-azure.yml/badge.svg)](https://github.com/JimmyManning/TBBAppProto/actions/workflows/deploy-azure.yml)
 
 Standalone Flask prototype for OCR-assisted alcohol label verification.
 
