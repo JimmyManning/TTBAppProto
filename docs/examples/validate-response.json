@@ -1,0 +1,16 @@
+{
+  "filename": "label-1.png",
+  "autoPass": true,
+  "needsReview": false,
+  "comparisons": [
+    {
+      "key": "brandName",
+      "label": "Brand Name",
+      "expected": "OLD TOM DISTILLERY",
+      "detected": "OLD TOM DISTILLERY",
+      "pass": true,
+      "score": 1.0
+    }
+  ],
+  "extractedText": "OLD TOM DISTILLERY\n45% Alc./Vol.\n750 mL"
+}

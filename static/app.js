@@ -1,9 +1,10 @@
-const fields = {
+let fields = {
   brandName: "Brand Name",
   classTypeCode: "Class/Type Code",
   alcoholContent: "Alcohol Content (%)",
   netContents: "Net Contents",
   bottler: "Bottler/Producer",
+  bottlerAddress: "Bottler/Producer Address",
   origin: "Country of Origin",
 };
 
@@ -14,11 +15,93 @@ const resultTemplate = document.getElementById("resultTemplate");
 const classTypeCodeInput = document.getElementById("classTypeCode");
 const classCodeCategorySelect = document.getElementById("classCodeCategory");
 const classCodeTypeSelect = document.getElementById("classCodeType");
+const originSelect = document.getElementById("origin");
 const ageYearsInput = document.getElementById("ageYears");
 const ageYearsHint = document.getElementById("ageYearsHint");
-const MAX_BATCH_IMAGES = 50;
+const alcoholContentInput = document.getElementById("alcoholContent");
+const netContentsInput = document.getElementById("netContents");
+const labelFilesInput = document.getElementById("labelFiles");
+let MAX_BATCH_IMAGES = 50;
+
+const COUNTRIES = [
+  "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia",
+  "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium",
+  "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria",
+  "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad",
+  "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica", "Côte d’Ivoire", "Croatia", "Cuba", "Cyprus",
+  "Czechia", "Democratic People’s Republic of Korea", "Democratic Republic of the Congo", "Denmark", "Djibouti",
+  "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia",
+  "Eswatini", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana",
+  "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Hungary",
+  "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", "Jordan",
+  "Kazakhstan", "Kenya", "Kiribati", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia",
+  "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali",
+  "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia",
+  "Montenegro", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand",
+  "Nicaragua", "Niger", "Nigeria", "North Macedonia", "Norway", "Oman", "Pakistan", "Palau", "Panama",
+  "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Republic of Korea",
+  "Romania", "Russian Federation", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia",
+  "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal",
+  "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia",
+  "South Africa", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria",
+  "Tajikistan", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Türkiye",
+  "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United Republic of Tanzania",
+  "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe",
+  "Holy See", "State of Palestine"
+];
 
 let classCodeEntries = [];
+let requiredFieldKeys = Object.keys(fields);
+
+async function initFieldConfig() {
+  try {
+    const response = await fetch("/api/config");
+    if (!response.ok) return;
+    const config = await response.json();
+    if (config && typeof config === "object") {
+      if (config.fieldLabels && typeof config.fieldLabels === "object") {
+        fields = { ...fields, ...config.fieldLabels };
+      }
+      if (Array.isArray(config.requiredFields) && config.requiredFields.length) {
+        requiredFieldKeys = config.requiredFields.filter((key) => typeof key === "string" && key.trim());
+      }
+      if (typeof config.maxBatchImages === "number" && Number.isFinite(config.maxBatchImages)) {
+        MAX_BATCH_IMAGES = config.maxBatchImages;
+      }
+    }
+  } catch {
+    // fallback to local defaults
+  }
+}
+
+function sanitizeNumericWithDecimal(value) {
+  const cleaned = String(value || "").replace(/[^0-9.]/g, "");
+  const firstDotIndex = cleaned.indexOf(".");
+  if (firstDotIndex < 0) return cleaned;
+  return `${cleaned.slice(0, firstDotIndex + 1)}${cleaned.slice(firstDotIndex + 1).replace(/\./g, "")}`;
+}
+
+function bindNumericOnlyInput(inputEl) {
+  if (!inputEl) return;
+  inputEl.addEventListener("input", () => {
+    const sanitized = sanitizeNumericWithDecimal(inputEl.value);
+    if (inputEl.value !== sanitized) {
+      inputEl.value = sanitized;
+    }
+  });
+}
+
+function initOriginSelect() {
+  if (!originSelect) return;
+  originSelect.innerHTML = "";
+  COUNTRIES.forEach((country) => {
+    const option = document.createElement("option");
+    option.value = country;
+    option.textContent = country;
+    option.selected = country === "United States";
+    originSelect.appendChild(option);
+  });
+}
 
 function parseClassCodeTsv(tsvText) {
   return tsvText
@@ -220,11 +303,20 @@ async function initGuidedClassCodeSelection() {
   }
 }
 
+initFieldConfig();
 initGuidedClassCodeSelection();
 updateAgeRequirementUi();
+bindNumericOnlyInput(alcoholContentInput);
+bindNumericOnlyInput(netContentsInput);
+initOriginSelect();
 
 function getExpected() {
-  const expected = Object.fromEntries(Object.keys(fields).map((k) => [k, document.getElementById(k).value.trim()]));
+  const expected = Object.fromEntries(
+    requiredFieldKeys.map((k) => {
+      const el = document.getElementById(k);
+      return [k, el ? el.value.trim() : ""];
+    })
+  );
   const alcoholRaw = expected.alcoholContent;
   const alcoholValue = Number.parseFloat(alcoholRaw);
   expected.alcoholContent = Number.isFinite(alcoholValue) ? alcoholValue : alcoholRaw;
@@ -241,20 +333,39 @@ function getExpected() {
     expected.ageYears = Number.isFinite(ageValue) ? ageValue : ageRaw;
   }
 
+  expected.fdcYellow5 = document.getElementById("flagFdcYellow5").checked;
+  expected.cochinealExtract = document.getElementById("flagCochinealExtract").checked;
+  expected.carmine = document.getElementById("flagCarmine").checked;
+
   return expected;
 }
 
 function getMissingExpectedFields(expected) {
-  return Object.keys(fields).filter((key) => {
+  const issues = [];
+
+  requiredFieldKeys.forEach((key) => {
     if (key === "alcoholContent") {
-      return !(typeof expected.alcoholContent === "number" && expected.alcoholContent > 0 && expected.alcoholContent <= 100);
+      if (!(typeof expected.alcoholContent === "number" && expected.alcoholContent > 0 && expected.alcoholContent <= 100)) {
+        issues.push("Alcohol Content must be a number between 0 and 100.");
+      }
+      return;
     }
-    return !expected[key];
-  }).concat(
-    requiresAgeForClassCode(expected.classTypeCode) && !(typeof expected.ageYears === "number" && expected.ageYears > 0)
-      ? ["ageYears"]
-      : []
-  );
+
+    if (!expected[key]) {
+      issues.push(`${fields[key]} is required.`);
+    }
+  });
+
+  const netAmountRaw = netContentsInput.value.trim();
+  if (!netAmountRaw || !/^\d+(?:\.\d+)?$/.test(netAmountRaw)) {
+    issues.push("Net Contents amount must be a number.");
+  }
+
+  if (requiresAgeForClassCode(expected.classTypeCode) && !(typeof expected.ageYears === "number" && expected.ageYears > 0)) {
+    issues.push("Age Statement (Years) is required for the selected class/type code.");
+  }
+
+  return issues;
 }
 
 async function validateViaBackend(files, expected) {
@@ -305,8 +416,21 @@ function renderSummary(total, autoPass, needsReview, elapsedMs) {
   `;
 }
 
+labelFilesInput.addEventListener("change", () => {
+  const count = labelFilesInput.files?.length || 0;
+  if (!count) {
+    statusEl.textContent = "";
+    return;
+  }
+  if (count > MAX_BATCH_IMAGES) {
+    statusEl.textContent = `You selected ${count} images. Maximum allowed is ${MAX_BATCH_IMAGES}.`;
+  } else {
+    statusEl.textContent = `${count} image(s) selected.`;
+  }
+});
+
 document.getElementById("verifyBtn").addEventListener("click", async () => {
-  const files = [...document.getElementById("labelFiles").files];
+  const files = [...labelFilesInput.files];
   if (!files.length) {
     statusEl.textContent = "Select one or more label images.";
     return;
@@ -318,9 +442,9 @@ document.getElementById("verifyBtn").addEventListener("click", async () => {
   }
 
   const expected = getExpected();
-  const missing = getMissingExpectedFields(expected);
-  if (missing.length) {
-    statusEl.textContent = `Fill all required fields before verification (missing: ${missing.join(", ")}).`;
+  const issues = getMissingExpectedFields(expected);
+  if (issues.length) {
+    statusEl.textContent = `Please fix input issues: ${issues.join(" ")}`;
     return;
   }
 

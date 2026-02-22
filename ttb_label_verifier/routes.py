@@ -2,16 +2,22 @@
 
 import json
 from collections.abc import Mapping
+from pathlib import Path
 from typing import Any
 
 from flask import Blueprint, jsonify, render_template, request
 
+from ttb_label_verifier.frontend_data import (
+    load_countries,
+    load_frontend_config,
+)
 from ttb_label_verifier.ocr import ocr_image_file
+from ttb_label_verifier.request_models import NormalizedExpected
 from ttb_label_verifier.validation import (
     EXPECTED_INPUT_FIELDS,
+    FIELD_LABELS,
+    OPTIONAL_FIELD_LABELS,
     class_code_requires_age,
-    parse_age_years,
-    parse_percentage_value,
     validate_label,
 )
 
@@ -19,6 +25,16 @@ api_blueprint = Blueprint("api", __name__)
 REQUIRED_FIELDS = tuple(EXPECTED_INPUT_FIELDS)
 UNSUPPORTED_CONTENT_TYPE_MESSAGE = "Only multipart/form-data with image upload is supported"
 MAX_BATCH_IMAGES = 50
+OPENAPI_SCHEMA_PATH = Path(__file__).resolve().parent.parent / "docs" / "openapi.yaml"
+
+
+def _get_max_batch_images() -> int:
+    """Get max upload count from frontend config with safe fallback."""
+    frontend_config = load_frontend_config()
+    value = frontend_config.get("maxBatchImages")
+    if isinstance(value, int) and value > 0:
+        return value
+    return MAX_BATCH_IMAGES
 
 
 def _get_expected_from_form(form_data: Mapping[str, Any], fallback: dict[str, Any] | None = None) -> tuple[dict[str, Any], str | None]:
@@ -52,23 +68,10 @@ def _validate_required_expected_fields(expected: dict[str, Any], prefix: str = "
     if not isinstance(expected, dict):
         return f"{prefix} must be an object"
 
-    for key in REQUIRED_FIELDS:
-        value = expected.get(key)
-        if key == "alcoholContent":
-            if parse_percentage_value(value) is None:
-                return f"{prefix}.{key} must be a numeric percentage (0-100]"
-            continue
-
-        if not isinstance(value, str) or not value.strip():
-            return f"{prefix}.{key} is required"
-
-    class_type_code = str(expected.get("classTypeCode", "") or "").strip()
-    if class_code_requires_age(class_type_code):
-        age_value = expected.get("ageYears")
-        if parse_age_years(age_value) is None:
-            return f"{prefix}.ageYears is required for classTypeCode {class_type_code}"
-
-    return None
+    normalized = NormalizedExpected.from_mapping(expected)
+    class_type_code = str(normalized.payload.get("classTypeCode", "") or "").strip()
+    requires_age = class_code_requires_age(class_type_code)
+    return normalized.validate_required(requires_age=requires_age, prefix=prefix)
 
 
 def _build_batch_response(results: list[dict[str, Any]]) -> tuple[dict[str, Any], int]:
@@ -95,6 +98,32 @@ def index():
 def health():
     """Return service health status."""
     return {"status": "ok"}
+
+
+@api_blueprint.get("/api/config")
+def api_config():
+    """Return backend-owned field definitions for UI alignment."""
+    frontend_config = load_frontend_config()
+    max_batch_images = _get_max_batch_images()
+
+    return {
+        "requiredFields": list(REQUIRED_FIELDS),
+        "fieldLabels": FIELD_LABELS,
+        "optionalFieldLabels": OPTIONAL_FIELD_LABELS,
+        "maxBatchImages": max_batch_images,
+        "defaultOrigin": frontend_config.get("defaultOrigin", "United States"),
+        "countries": load_countries(),
+        "additiveFlags": frontend_config.get("additiveFlags", []),
+        "numericSanitization": frontend_config.get("numericSanitization", {}),
+    }
+
+
+@api_blueprint.get("/api/openapi.yaml")
+def api_openapi_schema():
+    """Return the published OpenAPI schema document."""
+    if not OPENAPI_SCHEMA_PATH.exists():
+        return jsonify({"error": "OpenAPI schema not found"}), 404
+    return OPENAPI_SCHEMA_PATH.read_text(encoding="utf-8"), 200, {"Content-Type": "application/yaml; charset=utf-8"}
 
 
 @api_blueprint.post("/api/validate")
@@ -150,8 +179,9 @@ def api_validate_batch():
         return jsonify({"error": error}), 400
     if not files:
         return jsonify({"error": "No images uploaded. Use form-data key 'images'."}), 400
-    if len(files) > MAX_BATCH_IMAGES:
-        return jsonify({"error": f"Maximum {MAX_BATCH_IMAGES} images are allowed per request"}), 400
+    max_batch_images = _get_max_batch_images()
+    if len(files) > max_batch_images:
+        return jsonify({"error": f"Maximum {max_batch_images} images are allowed per request"}), 400
     if expected_list is not None and len(expected_list) != len(files):
         return jsonify({"error": "expectedList length must match number of images"}), 400
 

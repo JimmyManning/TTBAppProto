@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TTB Label Verification Prototype</title>
+    <title>TTB Label Verification</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
   </head>
   <body>
     <main class="container">
       <header>
         <h1>Alcohol Label Verification</h1>
-        <p>Standalone prototype for TTB compliance review acceleration.</p>
+        <p>OCR-assisted workflow for TTB compliance review acceleration.</p>
       </header>
 
       <section class="card">
@@ -56,20 +56,31 @@
               </select>
             </div>
           </label>
-          <label>Bottler/Producer <input id="bottler" placeholder="Bottled by ..." /></label>
-          <label>Country of Origin <input id="origin" placeholder="Product of USA" /></label>
+          <label class="span-full">Bottler/Producer Name<input id="bottler" placeholder="Bottled by ..." /></label>
+          <label class="span-full">Bottler/Producer Address <input id="bottlerAddress" placeholder="123 Main St, Frankfort, KY" /></label>
+          <label
+            >Country of Origin
+            <select id="origin"></select>
+          </label>
           <label
             >Age Statement (Years)
             <input id="ageYears" type="number" min="0.1" max="150" step="0.1" placeholder="4" />
             <small id="ageYearsHint" class="note">Required for certain whisky classes (Chapter 8).</small>
           </label>
+
+          <div class="span-full additive-options">
+            <strong>Optional additive disclosure checks</strong>
+            <label><input id="flagFdcYellow5" type="checkbox" /> FD&C Yellow No. 5</label>
+            <label><input id="flagCochinealExtract" type="checkbox" /> Cochineal Extract</label>
+            <label><input id="flagCarmine" type="checkbox" /> Carmine</label>
+          </div>
         </div>
 
-        <p class="note">Government warning text is validated automatically by backend constant.</p>
       </section>
 
       <section class="card">
-        <h2>Batch Label Upload</h2>
+        <h2>Label Upload</h2>
+        <p class="note">Select one or more images (maximum 50).</p>
         <input id="labelFiles" type="file" accept="image/*" multiple />
         <div class="actions">
           <button id="verifyBtn">Verify Labels</button>
@@ -106,6 +117,6 @@
       </article>
     </template>
 
-    <script src="{{ url_for('static', filename='app.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
   </body>
 </html>

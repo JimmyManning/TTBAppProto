@@ -1,0 +1,15 @@
+{
+  "expected": {
+    "brandName": "OLD TOM DISTILLERY",
+    "classTypeCode": "101",
+    "alcoholContent": 45,
+    "netContents": "750 mL",
+    "bottler": "Bottled by Old Tom Distillery, Frankfort, KY",
+    "bottlerAddress": "123 Main St, Frankfort, KY",
+    "origin": "United States",
+    "ageYears": 4,
+    "fdcYellow5": false,
+    "cochinealExtract": false,
+    "carmine": false
+  }
+}

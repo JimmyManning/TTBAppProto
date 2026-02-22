@@ -1,204 +1,138 @@
 # Architecture Overview
 
-This document describes how the prototype is structured, how data moves through the system, and which technologies are used.
+This document describes the current architecture and data flow.
 
-## 1) High-level architecture
+## 1) System shape
 
-The application is a single Flask service that provides:
+The app is a single Flask service with:
 
-- Server-rendered web UI (`/`)
-- Health endpoint (`/health`)
-- Validation APIs (`/api/validate`, `/api/validate/batch`)
-- OCR + field-comparison business logic in a shared backend path
-
-Both the browser workflow and external API clients use the same validation logic on the backend.
+- server-rendered UI at `/`
+- API endpoints for config and validation
+- local OCR processing via Tesseract
+- shared validation pipeline used by both UI and API clients
 
 ```mermaid
 flowchart LR
-    User[Compliance Agent] --> Browser[Web Browser UI]
-    Browser -->|multipart/form-data| Flask[Flask App]
-  Client[API Client / Automation] -->|multipart/form-data| Flask
+    User[Reviewer] --> Browser[Web UI]
+    Browser -->|multipart/form-data| Flask[Flask Service]
+    Client[Automation Client] -->|multipart/form-data| Flask
 
-    Flask --> OCR[OCR Layer\nPillow + pytesseract]
-  OCR --> Validation[Validation Engine\nMatching + Rule Checks + Constant Warning Rule]
-    Validation --> Response[JSON Results\nautoPass / needsReview]
+    Flask --> OCR[OCR Engine\nPillow + pytesseract + Tesseract]
+    Flask --> Validation[Validation Pipeline\nRegistry + Rule Modules]
+    OCR --> Validation
+    Validation --> Response[JSON results\nautoPass/needsReview]
     Response --> Browser
     Response --> Client
 ```
 
-## 2) Technology stack
-
-### Runtime and framework
-
-- **Python 3.13** (compatible with 3.11+)
-- **Flask 3.1** for web serving and API routing
-
-### OCR and image handling
-
-- **Tesseract OCR (system binary)** for text extraction
-- **pytesseract** Python wrapper for invoking Tesseract
-- **Pillow (PIL)** for image loading/conversion
-- Multi-variant OCR preprocessing + staged candidate evaluation for speed/quality balance
-
-### Frontend
-
-- Server-rendered HTML template
-- Vanilla JavaScript + CSS
-- Web UI sends uploaded images to backend API and renders returned comparisons
-
-### Quality/automation
-
-- `unittest` test suite for helper logic and endpoints
-- GitHub Actions CI workflow for syntax + tests
-
-## 3) Core backend modules and responsibilities
+## 2) Main backend modules
 
 - `app.py`
-  - Development entrypoint
-  - Creates Flask app via factory
-  - Re-exports legacy symbols for compatibility
+  - development entrypoint (`port 5001`)
 
 - `ttb_label_verifier/__init__.py`
-  - Application factory (`create_app`)
-  - Blueprint registration
+  - app factory (`create_app`)
+  - blueprint registration
 
 - `ttb_label_verifier/routes.py`
-  - Route handlers (`/`, `/health`, `/api/validate`, `/api/validate/batch`)
-  - Multipart/form-data parsing
-  - Required-field validation for expected metadata
-  - Batch orchestration and error handling
+  - route handlers:
+    - `GET /`
+    - `GET /health`
+    - `GET /api/config`
+    - `GET /api/openapi.yaml`
+    - `POST /api/validate`
+    - `POST /api/validate/batch`
+  - request parsing and required-field checks
+  - batch limits and error mapping
 
 - `ttb_label_verifier/ocr.py`
-  - OCR integration (`ocr_image_file`)
-  - PIL conversion and Tesseract invocation
-  - OCR dependency and runtime availability checks
+  - OCR dependency checks
+  - image preprocessing variants
+  - staged OCR candidate scoring
+  - returns best extracted text
+
+- `ttb_label_verifier/request_models.py`
+  - typed normalization of incoming `expected` payload (`NormalizedExpected`)
+  - required-field validation with conditional `ageYears`
 
 - `ttb_label_verifier/validation.py`
-  - Matching helpers (`normalize_loose`, `similarity`, regex extraction)
-  - Field detection and scoring
-  - Rule enforcement (`govWarning` strict handling with backend constant text)
-  - Alcohol format/proof checks
-  - Conditional origin skip for U.S./state inputs
-  - Conditional age requirement by class/type code and age statement validation
-  - Result assembly (`validate_label`)
+  - orchestration layer for field validation
+  - registry dispatch via `FIELD_VALIDATOR_REGISTRY`
+  - final comparison row assembly and `autoPass` computation
 
-- `static/app.js`
-  - Collect expected metadata from UI
-  - Upload one/many images to `/api/validate/batch`
-  - Render summary and per-label comparison tables
+- `ttb_label_verifier/validators/`
+  - `definitions.py`: field labels, warning constant, required keys
+  - `parsing.py`: percentage/age/boolean parsing
+  - `policy.py`: class-code age policy, origin skip policy, class code label loading
+  - `rules.py`: warning/alcohol/class code/age/additive rule logic
+  - `registry.py`: key-to-validator mapping
+  - `text.py`: normalization and fuzzy-match helpers
 
-- `templates/index.html`
-  - UI layout for metadata fields, file upload, and results
+- `ttb_label_verifier/frontend_data.py`
+  - loads frontend data from `static/data/countries.json` and `static/data/frontend_config.json`
 
-## 4) Request/response flow
+## 3) Frontend modules
 
-### Web app path
+- `templates/index.html` renders the UI shell.
+- `static/js/main.js` is the browser entrypoint.
+- `static/js/form.js` handles input collection/sanitization/validation helpers.
+- `static/js/api-client.js` sends batch requests.
+- `static/js/guided-selection.js` drives class/type guided selector.
+- `static/js/render.js` renders summary and result cards.
 
-1. User enters expected label metadata in UI.
-2. User uploads one or more label images.
-3. Browser sends multipart request to `/api/validate/batch`.
-4. Backend extracts text with Tesseract.
-5. Backend runs comparison rules and returns JSON.
-6. UI renders per-field PASS/REVIEW and batch totals.
+Frontend config and static lists are externalized:
 
-### API automation path
+- `static/data/countries.json`
+- `static/data/frontend_config.json`
 
-- Supports **multipart image mode only** (backend performs OCR).
-- All expected metadata fields are required from callers **except** `govWarning`.
-- `govWarning` is always validated against a backend constant with exact case and wording.
-- `alcoholContent` is numeric percentage input; OCR text must include required alc/alcohol + by|/ + vol/volume phrasing.
-- If proof appears in OCR text, proof must match $2 \times \text{ABV}$.
-- `ageYears` is required only when class/type rules require age.
+`GET /api/config` publishes backend-owned config used by the frontend.
+
+## 4) Request flow
 
 ```mermaid
 sequenceDiagram
-    participant U as User/API Client
-    participant F as Flask API
-    participant O as OCR (Tesseract)
-    participant V as Validation Engine
+    participant C as Client (UI/API)
+    participant R as routes.py
+    participant O as ocr.py
+    participant V as validation.py + validators/*
 
-    U->>F: POST /api/validate or /api/validate/batch
-    F->>O: Extract text from image(s)
-    O-->>F: OCR text
-
-    F->>V: validate_label(text, expected)
-    V-->>F: comparisons + autoPass/needsReview
-    F-->>U: JSON response
+    C->>R: POST /api/validate or /api/validate/batch (multipart)
+    R->>R: Parse and normalize expected payload
+    R->>O: OCR image(s)
+    O-->>R: Extracted text
+    R->>V: validate_label(extracted_text, expected)
+    V-->>R: comparisons + pass/fail
+    R-->>C: JSON response
 ```
 
-## 5) Package/module interaction
+## 5) Validation behavior (current)
 
-```mermaid
-flowchart TB
-    Entry[app.py] --> Factory[create_app() in ttb_label_verifier/__init__.py]
-    Factory --> Routes[routes.py Blueprint]
-    Routes --> OCR[ocr.py]
-    Routes --> Validation[validation.py]
-    Routes --> Templates[templates/index.html]
-    Templates --> Static[static/app.js + static/styles.css]
-```
+- Fuzzy matching for standard text fields.
+- Strict backend warning validation for the government warning text and uppercase header.
+- Alcohol validation requires `%` + `alc/alcohol` + `by|/` + `vol/volume`; `ABV` is rejected.
+- If proof appears, proof consistency is enforced with $\text{proof} = 2 \times \text{ABV}$.
+- Origin validation is skipped when expected origin is U.S./U.S. alias/state.
+- Age comparison row is included when class policy requires age or `ageYears` is provided.
+- Optional additive rows are included when additive flags are set.
 
-## 6) Validation rules summary
+## 6) API contract notes
 
-- Fuzzy matching for most fields (case/punctuation tolerant)
-- Regex-first extraction for `netContents` and `origin`
-- Strict warning validation uses backend constant text:
-  - exact warning text presence
-  - uppercase `GOVERNMENT WARNING:` header required
-  - expected value is not provided by API callers
-- Warning failures return closest detected text + reason details
-- Alcohol validation requires `%` + `alc/alcohol` with `vol/volume` via `by` or `/`; `ABV` is rejected
-- Proof validation enforced when proof appears
-- Origin validation is skipped for U.S./USA/state expected values
-- Age statement comparison is added as another result row when required/provided
+- Validation endpoints accept only `multipart/form-data` uploads.
+- `expected` must include:
+  - `brandName`, `classTypeCode`, `alcoholContent`, `netContents`, `bottler`, `bottlerAddress`, `origin`
+- `ageYears` is conditionally required by class/type policy.
+- `govWarning` is backend-enforced and not caller-provided.
+- Batch max size is loaded from frontend config and enforced server-side.
 
-## 7) API contract summary
+## 7) Documentation and schema
 
-- `POST /api/validate`
-  - Required: `multipart/form-data`, `image`, and `expected` with:
-    - `brandName`
-    - `classTypeCode`
-    - `alcoholContent` (number)
-    - `netContents`
-    - `bottler`
-    - `origin`
-    - `ageYears` (required only when class/type requires age)
+- OpenAPI schema: `docs/openapi.yaml`
+- Examples: `docs/examples/*.json`
+- Schema is served at `GET /api/openapi.yaml`.
 
-- `POST /api/validate/batch`
-  - Required: `multipart/form-data`, `images`
-  - Also required either:
-    - shared `expected` object (same required fields above), or
-    - `expectedList` (same length as images; each object has same required fields)
+## 8) Operational notes
 
-Invalid content type or missing required fields return `400`.
-Missing OCR runtime returns `503`.
-
-## 8) Deployment model
-
-The prototype runs as a single service process with local OCR dependencies.
-
-```mermaid
-flowchart TB
-    subgraph Host[App Host]
-      App[Flask Process]
-      Tess[Tesseract Binary]
-      App --> Tess
-    end
-
-    Internet[Browser/API Callers] --> App
-    App --> Static[Static Assets + Templates]
-    App --> Json[JSON API Responses]
-```
-
-  ## 9) Operational notes
-
-- If Tesseract is unavailable on host PATH, image-upload API mode returns `503`.
-- Batch processing is currently sequential for predictable behavior.
-- CI runs in `.github/workflows/ci.yml`; Azure deployment pipeline is in `.github/workflows/deploy-azure.yml`.
-
-  ## 10) Future architecture evolution
-
-- Add async/background queue for large batches.
-- Add preprocessing pipeline (deskew/denoise/glare mitigation).
-- Add persistence layer for audit trails and historical metrics.
-- Add role-based auth if integrated into production workflows.
+- OCR requires system Tesseract. If unavailable, OCR endpoints return `503`.
+- Batch processing is synchronous/sequential.
+- CI workflow: `.github/workflows/ci.yml`
+- Azure deploy workflow: `.github/workflows/deploy-azure.yml`

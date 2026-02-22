@@ -1,4 +1,4 @@
-"""Application factory for the TTB label verification prototype."""
+"""Application factory for the TTB label verification service."""
 
 from flask import Flask
 

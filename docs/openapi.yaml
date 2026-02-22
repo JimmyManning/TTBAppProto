@@ -1,0 +1,184 @@
+openapi: 3.1.0
+info:
+  title: TTB Label Verification API
+  version: 0.1.0
+  description: |
+    API for OCR-based alcohol label verification.
+servers:
+  - url: http://localhost:5000
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: Service status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+
+  /api/config:
+    get:
+      summary: Frontend configuration
+      responses:
+        '200':
+          description: UI configuration payload
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  requiredFields:
+                    type: array
+                    items:
+                      type: string
+                  fieldLabels:
+                    type: object
+                    additionalProperties:
+                      type: string
+                  optionalFieldLabels:
+                    type: object
+                    additionalProperties:
+                      type: string
+                  maxBatchImages:
+                    type: integer
+                  defaultOrigin:
+                    type: string
+                  countries:
+                    type: array
+                    items:
+                      type: string
+                  additiveFlags:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        key:
+                          type: string
+                        label:
+                          type: string
+                        checkboxId:
+                          type: string
+                  numericSanitization:
+                    type: object
+
+  /api/validate:
+    post:
+      summary: Validate one label image
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - image
+                - expected
+              properties:
+                image:
+                  type: string
+                  format: binary
+                expected:
+                  type: string
+                  description: JSON string for expected metadata
+      responses:
+        '200':
+          description: Validation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationResult'
+              examples:
+                success:
+                  externalValue: ./examples/validate-response.json
+        '400':
+          description: Invalid request
+
+  /api/validate/batch:
+    post:
+      summary: Validate multiple label images
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - images
+                - expected
+              properties:
+                images:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                expected:
+                  type: string
+                  description: JSON string for expected metadata shared across all images
+                expectedList:
+                  type: string
+                  description: JSON array for per-image expected metadata
+      responses:
+        '200':
+          description: Batch validation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchValidationResult'
+              examples:
+                success:
+                  externalValue: ./examples/batch-response.json
+        '400':
+          description: Invalid request
+
+components:
+  schemas:
+    Comparison:
+      type: object
+      properties:
+        key:
+          type: string
+        label:
+          type: string
+        expected:
+          nullable: true
+        detected:
+          type: string
+        pass:
+          type: boolean
+        score:
+          type: number
+    ValidationResult:
+      type: object
+      properties:
+        filename:
+          type: string
+          nullable: true
+        autoPass:
+          type: boolean
+        needsReview:
+          type: boolean
+        comparisons:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comparison'
+        extractedText:
+          type: string
+    BatchValidationResult:
+      type: object
+      properties:
+        total:
+          type: integer
+        autoPass:
+          type: integer
+        needsReview:
+          type: integer
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationResult'

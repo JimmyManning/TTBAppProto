@@ -1,0 +1,21 @@
+{
+  "total": 2,
+  "autoPass": 1,
+  "needsReview": 1,
+  "results": [
+    {
+      "filename": "label1.png",
+      "autoPass": true,
+      "needsReview": false,
+      "comparisons": [],
+      "extractedText": "..."
+    },
+    {
+      "filename": "label2.png",
+      "autoPass": false,
+      "needsReview": true,
+      "comparisons": [],
+      "extractedText": "..."
+    }
+  ]
+}

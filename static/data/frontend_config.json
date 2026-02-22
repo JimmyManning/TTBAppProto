@@ -1,0 +1,25 @@
+{
+  "defaultOrigin": "United States",
+  "maxBatchImages": 50,
+  "numericSanitization": {
+    "allowPattern": "[^0-9.]",
+    "singleDecimalPoint": true
+  },
+  "additiveFlags": [
+    {
+      "key": "fdcYellow5",
+      "label": "FD&C Yellow No. 5",
+      "checkboxId": "flagFdcYellow5"
+    },
+    {
+      "key": "cochinealExtract",
+      "label": "Cochineal Extract",
+      "checkboxId": "flagCochinealExtract"
+    },
+    {
+      "key": "carmine",
+      "label": "Carmine",
+      "checkboxId": "flagCarmine"
+    }
+  ]
+}

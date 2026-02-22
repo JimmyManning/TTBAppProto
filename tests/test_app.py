@@ -7,6 +7,34 @@ from ttb_label_verifier import create_app, routes, validation
 
 
 class ValidationHelperTests(unittest.TestCase):
+    @patch("ttb_label_verifier.validators.policy.load_class_type_code_labels")
+    def test_class_code_requires_age_table_driven(self, mock_labels):
+        mock_labels.return_value = {
+            "200": "SPIRIT WHISKY",
+            "201": "BLENDED WHISKY",
+            "202": "SOUR MASH WHISKY",
+            "203": "RUM",
+            "204": "RUM CORDIAL",
+            "205": "STRAIGHT BOURBON WHISKY",
+            "206": "WINE",
+        }
+
+        cases = [
+            ("200", True),
+            ("201", True),
+            ("202", False),
+            ("203", True),
+            ("204", False),
+            ("205", True),
+            ("206", False),
+            ("", False),
+            ("999", False),
+        ]
+
+        for code, expected in cases:
+            with self.subTest(code=code):
+                self.assertEqual(validation.class_code_requires_age(code), expected)
+
     def test_normalize_loose_ignores_case_and_punctuation(self):
         self.assertEqual(validation.normalize_loose("STONE'S THROW"), "stone s throw")
         self.assertEqual(validation.normalize_loose("Stone’s Throw"), "stone s throw")
@@ -127,6 +155,7 @@ class ValidationHelperTests(unittest.TestCase):
             "alcoholContent": 45,
             "netContents": "750 mL",
             "bottler": "Bottled by Old Tom Distillery, Frankfort, KY",
+            "bottlerAddress": "123 Main St, Frankfort, KY",
             "origin": "Product of USA",
             "ageYears": 4,
         }
@@ -138,6 +167,7 @@ class ValidationHelperTests(unittest.TestCase):
                 "AGED 4 YEARS",
                 "750 mL",
                 "Bottled by Old Tom Distillery, Frankfort, KY",
+                "123 Main St, Frankfort, KY",
                 "Product of USA",
                 validation.REQUIRED_GOV_WARNING,
             ]
@@ -154,11 +184,28 @@ class ValidationHelperTests(unittest.TestCase):
             "alcoholContent": 45,
             "netContents": "750 mL",
             "bottler": "Bottled by Old Tom Distillery, Frankfort, KY",
+            "bottlerAddress": "123 Main St, Frankfort, KY",
             "origin": "Product of USA",
         }
         result = validation.validate_label("OLD TOM DISTILLERY", expected)
         age_row = next(item for item in result["comparisons"] if item["key"] == "ageYears")
         self.assertFalse(age_row["pass"])
+
+    def test_additive_flag_passes_with_contains_phrase(self):
+        expected = {
+            "fdcYellow5": True,
+        }
+        result = validation.validate_label("Contains FD&C Yellow No. 5", expected)
+        row = next(item for item in result["comparisons"] if item["key"] == "fdcYellow5")
+        self.assertTrue(row["pass"])
+
+    def test_additive_flag_fails_without_contains_phrase(self):
+        expected = {
+            "carmine": True,
+        }
+        result = validation.validate_label("Carmine added for color", expected)
+        row = next(item for item in result["comparisons"] if item["key"] == "carmine")
+        self.assertFalse(row["pass"])
 
 
 class ApiEndpointTests(unittest.TestCase):
@@ -170,6 +217,7 @@ class ApiEndpointTests(unittest.TestCase):
             "alcoholContent": 45,
             "netContents": "750 mL",
             "bottler": "Bottled by Old Tom Distillery, Frankfort, KY",
+            "bottlerAddress": "123 Main St, Frankfort, KY",
             "origin": "Product of USA",
             "ageYears": 4,
         }
@@ -178,6 +226,25 @@ class ApiEndpointTests(unittest.TestCase):
         resp = self.client.get("/health")
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.get_json(), {"status": "ok"})
+
+    def test_config_returns_backend_owned_field_definitions(self):
+        resp = self.client.get("/api/config")
+        self.assertEqual(resp.status_code, 200)
+        body = resp.get_json()
+        self.assertIn("fieldLabels", body)
+        self.assertIn("requiredFields", body)
+        self.assertIn("maxBatchImages", body)
+        self.assertIn("countries", body)
+        self.assertIn("defaultOrigin", body)
+        self.assertIn("additiveFlags", body)
+        self.assertIn("numericSanitization", body)
+        self.assertIn(body["defaultOrigin"], body["countries"])
+        self.assertEqual(body["maxBatchImages"], 50)
+
+    def test_openapi_schema_is_published(self):
+        resp = self.client.get("/api/openapi.yaml")
+        self.assertEqual(resp.status_code, 200)
+        self.assertIn("openapi:", resp.get_data(as_text=True))
 
     def test_single_validate_rejects_json_content_type(self):
         resp = self.client.post("/api/validate", json={"foo": "bar"})
@@ -205,6 +272,27 @@ class ApiEndpointTests(unittest.TestCase):
         body = resp.get_json()
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(body["extractedText"], "OLD TOM DISTILLERY")
+
+    @patch.object(routes, "ocr_image_file")
+    def test_single_validate_with_additive_flags_includes_result_row(self, mock_ocr):
+        mock_ocr.return_value = ("Contains Cochineal Extract", None)
+
+        resp = self.client.post(
+            "/api/validate",
+            data={
+                "image": (BytesIO(b"fake-image"), "label.png"),
+                "expected": json.dumps({
+                    **self.required_expected,
+                    "cochinealExtract": True,
+                }),
+            },
+            content_type="multipart/form-data",
+        )
+
+        body = resp.get_json()
+        self.assertEqual(resp.status_code, 200)
+        additive_row = next(item for item in body["comparisons"] if item["key"] == "cochinealExtract")
+        self.assertTrue(additive_row["pass"])
 
     @patch.object(routes, "ocr_image_file")
     def test_single_validate_rejects_missing_required_fields(self, mock_ocr):
