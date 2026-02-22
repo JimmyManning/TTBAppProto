@@ -1,0 +1,1602 @@
+[
+  {
+    "id": 1,
+    "image": "images/label_001.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 001",
+      "classTypeCode": "261",
+      "alcoholContent": 45.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 001, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "wine",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 2,
+    "image": "images/label_002.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 002",
+      "classTypeCode": "521",
+      "alcoholContent": 45.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 002, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "beer",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 3,
+    "image": "images/label_003.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 003",
+      "classTypeCode": "80",
+      "alcoholContent": 46.5,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 003, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "wine",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 4,
+    "image": "images/label_004.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 004",
+      "classTypeCode": "459",
+      "alcoholContent": 45.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 004, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 5,
+    "image": "images/label_005.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 005",
+      "classTypeCode": "655",
+      "alcoholContent": 42.5,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 005, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 6,
+    "image": "images/label_006.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 006",
+      "classTypeCode": "230",
+      "alcoholContent": 35.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 006, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "wine",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 7,
+    "image": "images/label_007.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 007",
+      "classTypeCode": "111",
+      "alcoholContent": 50.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 007, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "beer",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 8,
+    "image": "images/label_008.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 008",
+      "classTypeCode": "83",
+      "alcoholContent": 46.5,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 008, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "wine",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 9,
+    "image": "images/label_009.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 009",
+      "classTypeCode": "664",
+      "alcoholContent": 35.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 009, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 10,
+    "image": "images/label_010.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 010",
+      "classTypeCode": "268",
+      "alcoholContent": 40.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 010, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 11,
+    "image": "images/label_011.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 011",
+      "classTypeCode": "550",
+      "alcoholContent": 35.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 011, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "wine",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 12,
+    "image": "images/label_012.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 012",
+      "classTypeCode": "629",
+      "alcoholContent": 46.5,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 012, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "beer",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 13,
+    "image": "images/label_013.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 013",
+      "classTypeCode": "178",
+      "alcoholContent": 50.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 013, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 14,
+    "image": "images/label_014.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 014",
+      "classTypeCode": "603",
+      "alcoholContent": 35.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 014, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 15,
+    "image": "images/label_015.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 015",
+      "classTypeCode": "83C",
+      "alcoholContent": 46.5,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 015, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "wine",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 16,
+    "image": "images/label_016.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 016",
+      "classTypeCode": "675",
+      "alcoholContent": 42.5,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 016, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "wine",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 17,
+    "image": "images/label_017.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 017",
+      "classTypeCode": "677",
+      "alcoholContent": 45.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 017, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "beer",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 18,
+    "image": "images/label_018.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 018",
+      "classTypeCode": "599",
+      "alcoholContent": 40.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 018, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 19,
+    "image": "images/label_019.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 019",
+      "classTypeCode": "82C",
+      "alcoholContent": 40.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 019, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "wine",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 20,
+    "image": "images/label_020.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 020",
+      "classTypeCode": "647",
+      "alcoholContent": 35.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 020, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 21,
+    "image": "images/label_021.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 021",
+      "classTypeCode": "436",
+      "alcoholContent": 45.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 021, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "wine",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 22,
+    "image": "images/label_022.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 022",
+      "classTypeCode": "166",
+      "alcoholContent": 50.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 022, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "beer",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 23,
+    "image": "images/label_023.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 023",
+      "classTypeCode": "131",
+      "alcoholContent": 42.5,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 023, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 24,
+    "image": "images/label_024.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 024",
+      "classTypeCode": "643",
+      "alcoholContent": 35.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 024, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 25,
+    "image": "images/label_025.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 025",
+      "classTypeCode": "618",
+      "alcoholContent": 46.5,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 025, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 26,
+    "image": "images/label_026.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 026",
+      "classTypeCode": "494",
+      "alcoholContent": 42.5,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 026, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "wine",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 27,
+    "image": "images/label_027.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 027",
+      "classTypeCode": "987",
+      "alcoholContent": 40.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 027, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "beer",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 28,
+    "image": "images/label_028.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 028",
+      "classTypeCode": "768",
+      "alcoholContent": 46.5,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 028, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 29,
+    "image": "images/label_029.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 029",
+      "classTypeCode": "970",
+      "alcoholContent": 50.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 029, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 30,
+    "image": "images/label_030.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 030",
+      "classTypeCode": "121",
+      "alcoholContent": 40.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 030, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 31,
+    "image": "images/label_031.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 031",
+      "classTypeCode": "360",
+      "alcoholContent": 46.5,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 031, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "wine",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 32,
+    "image": "images/label_032.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 032",
+      "classTypeCode": "618",
+      "alcoholContent": 50.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 032, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "beer",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 33,
+    "image": "images/label_033.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 033",
+      "classTypeCode": "924",
+      "alcoholContent": 50.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 033, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 34,
+    "image": "images/label_034.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 034",
+      "classTypeCode": "286",
+      "alcoholContent": 50.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 034, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 35,
+    "image": "images/label_035.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 035",
+      "classTypeCode": "990",
+      "alcoholContent": 40.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 035, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 36,
+    "image": "images/label_036.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 036",
+      "classTypeCode": "161",
+      "alcoholContent": 40.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 036, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "wine",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 37,
+    "image": "images/label_037.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 037",
+      "classTypeCode": "751",
+      "alcoholContent": 40.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 037, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "beer",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 38,
+    "image": "images/label_038.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 038",
+      "classTypeCode": "536",
+      "alcoholContent": 42.5,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 038, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 39,
+    "image": "images/label_039.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 039",
+      "classTypeCode": "695",
+      "alcoholContent": 46.5,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 039, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 40,
+    "image": "images/label_040.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 040",
+      "classTypeCode": "957",
+      "alcoholContent": 45.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 040, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "beer",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 41,
+    "image": "images/label_041.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 041",
+      "classTypeCode": "287",
+      "alcoholContent": 35.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 041, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "wine",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 42,
+    "image": "images/label_042.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 042",
+      "classTypeCode": "777",
+      "alcoholContent": 50.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 042, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "beer",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 43,
+    "image": "images/label_043.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 043",
+      "classTypeCode": "451",
+      "alcoholContent": 45.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 043, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 44,
+    "image": "images/label_044.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 044",
+      "classTypeCode": "901",
+      "alcoholContent": 45.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 044, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "beer",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 45,
+    "image": "images/label_045.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 045",
+      "classTypeCode": "537",
+      "alcoholContent": 46.5,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 045, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 46,
+    "image": "images/label_046.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 046",
+      "classTypeCode": "495",
+      "alcoholContent": 46.5,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 046, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "wine",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 47,
+    "image": "images/label_047.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 047",
+      "classTypeCode": "330",
+      "alcoholContent": 35.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 047, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "beer",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 48,
+    "image": "images/label_048.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 048",
+      "classTypeCode": "133",
+      "alcoholContent": 46.5,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 048, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 49,
+    "image": "images/label_049.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 049",
+      "classTypeCode": "906",
+      "alcoholContent": 46.5,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 049, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 50,
+    "image": "images/label_050.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 050",
+      "classTypeCode": "178",
+      "alcoholContent": 35.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 050, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 51,
+    "image": "images/label_051.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 051",
+      "classTypeCode": "157",
+      "alcoholContent": 45.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 051, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "wine",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 52,
+    "image": "images/label_052.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 052",
+      "classTypeCode": "490",
+      "alcoholContent": 35.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 052, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "beer",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 53,
+    "image": "images/label_053.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 053",
+      "classTypeCode": "640",
+      "alcoholContent": 50.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 053, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 54,
+    "image": "images/label_054.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 054",
+      "classTypeCode": "977",
+      "alcoholContent": 50.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 054, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 55,
+    "image": "images/label_055.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 055",
+      "classTypeCode": "742",
+      "alcoholContent": 45.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 055, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 56,
+    "image": "images/label_056.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 056",
+      "classTypeCode": "297",
+      "alcoholContent": 35.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 056, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "wine",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 57,
+    "image": "images/label_057.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 057",
+      "classTypeCode": "605",
+      "alcoholContent": 35.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 057, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "beer",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 58,
+    "image": "images/label_058.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 058",
+      "classTypeCode": "575",
+      "alcoholContent": 50.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 058, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 59,
+    "image": "images/label_059.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 059",
+      "classTypeCode": "361",
+      "alcoholContent": 50.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 059, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 60,
+    "image": "images/label_060.png",
+    "designedOutcome": "pass",
+    "designedFailureReason": "",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 060",
+      "classTypeCode": "638",
+      "alcoholContent": 46.5,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 060, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 61,
+    "image": "images/label_061.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "wrong_origin",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 061",
+      "classTypeCode": "699",
+      "alcoholContent": 40.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 061, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "wine",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 62,
+    "image": "images/label_062.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "wrong_class_code",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 062",
+      "classTypeCode": "682",
+      "alcoholContent": 40.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 062, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "beer",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 63,
+    "image": "images/label_063.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "wrong_origin",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 063",
+      "classTypeCode": "290",
+      "alcoholContent": 35.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 063, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 64,
+    "image": "images/label_064.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "missing_warning",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 064",
+      "classTypeCode": "132",
+      "alcoholContent": 46.5,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 064, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 65,
+    "image": "images/label_065.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "proof_mismatch",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 065",
+      "classTypeCode": "664",
+      "alcoholContent": 42.5,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 065, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 66,
+    "image": "images/label_066.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "wrong_class_code",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 066",
+      "classTypeCode": "605",
+      "alcoholContent": 42.5,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 066, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "wine",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 67,
+    "image": "images/label_067.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "wrong_origin",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 067",
+      "classTypeCode": "452",
+      "alcoholContent": 35.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 067, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "beer",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 68,
+    "image": "images/label_068.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "abv_not_allowed",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 068",
+      "classTypeCode": "352",
+      "alcoholContent": 50.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 068, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 69,
+    "image": "images/label_069.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "wrong_class_code",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 069",
+      "classTypeCode": "287",
+      "alcoholContent": 42.5,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 069, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 70,
+    "image": "images/label_070.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "wrong_class_code",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 070",
+      "classTypeCode": "448",
+      "alcoholContent": 50.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 070, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 71,
+    "image": "images/label_071.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "proof_mismatch",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 071",
+      "classTypeCode": "972",
+      "alcoholContent": 40.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 071, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "wine",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 72,
+    "image": "images/label_072.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "wrong_origin",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 072",
+      "classTypeCode": "792",
+      "alcoholContent": 45.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 072, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "beer",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 73,
+    "image": "images/label_073.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "wrong_origin",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 073",
+      "classTypeCode": "740",
+      "alcoholContent": 50.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 073, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 74,
+    "image": "images/label_074.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "abv_not_allowed",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 074",
+      "classTypeCode": "641",
+      "alcoholContent": 42.5,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 074, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 75,
+    "image": "images/label_075.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "wrong_class_code",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 075",
+      "classTypeCode": "970",
+      "alcoholContent": 46.5,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 075, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 76,
+    "image": "images/label_076.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "abv_not_allowed",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 076",
+      "classTypeCode": "985",
+      "alcoholContent": 40.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 076, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "wine",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 77,
+    "image": "images/label_077.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "proof_mismatch",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 077",
+      "classTypeCode": "199",
+      "alcoholContent": 45.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 077, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "beer",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 78,
+    "image": "images/label_078.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "proof_mismatch",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 078",
+      "classTypeCode": "113",
+      "alcoholContent": 46.5,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 078, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 79,
+    "image": "images/label_079.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "missing_warning",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 079",
+      "classTypeCode": "297",
+      "alcoholContent": 50.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 079, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 80,
+    "image": "images/label_080.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "wrong_class_code",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 080",
+      "classTypeCode": "440",
+      "alcoholContent": 45.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 080, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 81,
+    "image": "images/label_081.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "missing_warning",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 081",
+      "classTypeCode": "280",
+      "alcoholContent": 35.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 081, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "wine",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 82,
+    "image": "images/label_082.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "wrong_origin",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 082",
+      "classTypeCode": "361",
+      "alcoholContent": 40.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 082, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "beer",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 83,
+    "image": "images/label_083.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "wrong_origin",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 083",
+      "classTypeCode": "111",
+      "alcoholContent": 45.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 083, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 84,
+    "image": "images/label_084.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "abv_not_allowed",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 084",
+      "classTypeCode": "667",
+      "alcoholContent": 45.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 084, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 85,
+    "image": "images/label_085.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "proof_mismatch",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 085",
+      "classTypeCode": "707",
+      "alcoholContent": 50.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 085, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 86,
+    "image": "images/label_086.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "wrong_class_code",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 086",
+      "classTypeCode": "239",
+      "alcoholContent": 42.5,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 086, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "wine",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 87,
+    "image": "images/label_087.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "wrong_origin",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 087",
+      "classTypeCode": "605",
+      "alcoholContent": 50.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 087, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "beer",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 88,
+    "image": "images/label_088.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "missing_warning",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 088",
+      "classTypeCode": "743",
+      "alcoholContent": 50.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 088, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 89,
+    "image": "images/label_089.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "wrong_class_code",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 089",
+      "classTypeCode": "412",
+      "alcoholContent": 35.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 089, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 90,
+    "image": "images/label_090.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "abv_not_allowed",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 090",
+      "classTypeCode": "86",
+      "alcoholContent": 45.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 090, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 91,
+    "image": "images/label_091.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "wrong_class_code",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 091",
+      "classTypeCode": "553",
+      "alcoholContent": 46.5,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 091, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "wine",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 92,
+    "image": "images/label_092.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "proof_mismatch",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 092",
+      "classTypeCode": "150",
+      "alcoholContent": 50.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 092, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "beer",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 93,
+    "image": "images/label_093.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "wrong_origin",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 093",
+      "classTypeCode": "753",
+      "alcoholContent": 40.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 093, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 94,
+    "image": "images/label_094.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "wrong_class_code",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 094",
+      "classTypeCode": "335",
+      "alcoholContent": 45.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 094, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 95,
+    "image": "images/label_095.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "missing_warning",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 095",
+      "classTypeCode": "611",
+      "alcoholContent": 40.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 095, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 96,
+    "image": "images/label_096.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "missing_warning",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 096",
+      "classTypeCode": "743",
+      "alcoholContent": 45.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 096, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "wine",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 97,
+    "image": "images/label_097.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "wrong_origin",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 097",
+      "classTypeCode": "789",
+      "alcoholContent": 35.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 097, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "beer",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 98,
+    "image": "images/label_098.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "missing_warning",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 098",
+      "classTypeCode": "147",
+      "alcoholContent": 35.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 098, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 99,
+    "image": "images/label_099.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "missing_warning",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 099",
+      "classTypeCode": "540",
+      "alcoholContent": 42.5,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 099, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  },
+  {
+    "id": 100,
+    "image": "images/label_100.png",
+    "designedOutcome": "fail",
+    "designedFailureReason": "abv_not_allowed",
+    "expected": {
+      "brandName": "COPILOT TEST DISTILLERY 100",
+      "classTypeCode": "624",
+      "alcoholContent": 50.0,
+      "netContents": "750 mL",
+      "bottler": "Bottled by COPILOT TEST DISTILLERY 100, Frankfort, KY",
+      "origin": "Product of USA"
+    },
+    "style": "spirits",
+    "notes": "Designed expectation before OCR runtime."
+  }
+]

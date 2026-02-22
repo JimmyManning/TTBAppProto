@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TTB Label Verification Prototype</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body>
+    <main class="container">
+      <header>
+        <h1>Alcohol Label Verification</h1>
+        <p>Standalone prototype for TTB compliance review acceleration.</p>
+      </header>
+
+      <section class="card">
+        <h2>Application Info</h2>
+        <div class="grid">
+          <label class="span-full">Brand Name <input id="brandName" placeholder="OLD TOM DISTILLERY" /></label>
+
+          <div class="class-code-section span-full">
+            <label class="class-code-input">Class/Type Code <input id="classTypeCode" placeholder="101" /></label>
+            <details class="guided-assist">
+              <summary>Optional guided Class/Type Code selection</summary>
+              <div class="grid">
+                <label>
+                  Common keyword
+                  <select id="classCodeCategory">
+                    <option value="">Loading…</option>
+                  </select>
+                </label>
+                <label>
+                  Specific type/code
+                  <select id="classCodeType">
+                    <option value="">Select keyword first</option>
+                  </select>
+                </label>
+              </div>
+            </details>
+          </div>
+
+          <label
+            >Alcohol Content (%)
+            <input id="alcoholContent" type="number" min="0.1" max="100" step="0.1" placeholder="45" />
+          </label>
+          <label
+            >Net Contents
+            <div class="inline-fields">
+              <input id="netContents" type="number" min="0.1" step="0.1" placeholder="750" />
+              <select id="netContentsUnit">
+                <option value="mL" selected>mL</option>
+                <option value="L">L</option>
+                <option value="fl. oz">fl. oz</option>
+                <option value="gal">gal</option>
+                <option value="pint">pint</option>
+              </select>
+            </div>
+          </label>
+          <label>Bottler/Producer <input id="bottler" placeholder="Bottled by ..." /></label>
+          <label>Country of Origin <input id="origin" placeholder="Product of USA" /></label>
+          <label
+            >Age Statement (Years)
+            <input id="ageYears" type="number" min="0.1" max="150" step="0.1" placeholder="4" />
+            <small id="ageYearsHint" class="note">Required for certain whisky classes (Chapter 8).</small>
+          </label>
+        </div>
+
+        <p class="note">Government warning text is validated automatically by backend constant.</p>
+      </section>
+
+      <section class="card">
+        <h2>Batch Label Upload</h2>
+        <input id="labelFiles" type="file" accept="image/*" multiple />
+        <div class="actions">
+          <button id="verifyBtn">Verify Labels</button>
+          <span id="status"></span>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Results</h2>
+        <div id="summary" class="summary"></div>
+        <div id="results"></div>
+      </section>
+    </main>
+
+    <template id="resultTemplate">
+      <article class="result-card">
+        <h3></h3>
+        <p class="confidence"></p>
+        <table>
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th>Expected</th>
+              <th>Detected</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <details>
+          <summary>OCR Text</summary>
+          <pre></pre>
+        </details>
+      </article>
+    </template>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+  </body>
+</html>
