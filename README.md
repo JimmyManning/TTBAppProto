@@ -1,7 +1,7 @@
 # Alcohol Label Verification Prototype
 
 [![CI](https://github.com/JimmyManning/TBBAppProto/actions/workflows/ci.yml/badge.svg)](https://github.com/JimmyManning/TBBAppProto/actions/workflows/ci.yml)
-[![Azure Deploy](https://github.com/JimmyManning/TBBAppProto/actions/workflows/deploy-azure.yml/badge.svg)](https://github.com/JimmyManning/TBBAppProto/actions/workflows/deploy-azure.yml)
+[![Azure Deploy](https://github.com/JimmyManning/TBBAppProto/actions/workflows/main_ttblabelverifyer.yml/badge.svg)](https://github.com/JimmyManning/TBBAppProto/actions/workflows/main_ttblabelverifyer.yml)
 
 Standalone Flask prototype for OCR-assisted alcohol label verification.
 
@@ -127,7 +127,7 @@ If Tesseract is unavailable, OCR endpoints return HTTP `503`.
 ## Deployment
 
 - CI workflow: [.github/workflows/ci.yml](.github/workflows/ci.yml)
-- Azure deployment workflow: [.github/workflows/deploy-azure.yml](.github/workflows/deploy-azure.yml)
+- Azure deployment workflow: [.github/workflows/main_ttblabelverifyer.yml](.github/workflows/main_ttblabelverifyer.yml)
 
 Azure runtime notes:
 
