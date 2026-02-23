@@ -129,11 +129,19 @@ If Tesseract is unavailable, OCR endpoints return HTTP `503`.
 - CI workflow: [.github/workflows/ci.yml](.github/workflows/ci.yml)
 - Azure deployment workflow: [.github/workflows/main_ttblabelverifyer.yml](.github/workflows/main_ttblabelverifyer.yml)
 
-Azure runtime notes:
+Azure deployment strategy:
 
-- `Procfile` starts `startup.sh`.
-- `startup.sh` installs `tesseract-ocr` if missing, then launches `gunicorn`.
-- Ensure the App Service startup command is set to use the `Procfile` (or explicitly set to `bash startup.sh` if needed).
+- Build a Docker image from [Dockerfile](Dockerfile) (includes `tesseract-ocr`).
+- Push image to Azure Container Registry (ACR).
+- Configure Azure Web App to run that container image.
+
+Required GitHub secrets for container deploy workflow:
+
+- `AZUREAPPSERVICE_CLIENTID_393A544A81EC40399C46C84245657BAF`
+- `AZUREAPPSERVICE_TENANTID_F205CD6376B945618A52C395EE12A910`
+- `AZUREAPPSERVICE_SUBSCRIPTIONID_5C18393017824C0994DC52BD46394808`
+- `AZURE_ACR_NAME`
+- `AZURE_RESOURCE_GROUP`
 
 ## Known Issues
 - Many requirments from TBB are not upheld
