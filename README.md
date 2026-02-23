@@ -129,8 +129,14 @@ If Tesseract is unavailable, OCR endpoints return HTTP `503`.
 - CI workflow: [.github/workflows/ci.yml](.github/workflows/ci.yml)
 - Azure deployment workflow: [.github/workflows/deploy-azure.yml](.github/workflows/deploy-azure.yml)
 
+Azure runtime notes:
+
+- `Procfile` starts `startup.sh`.
+- `startup.sh` installs `tesseract-ocr` if missing, then launches `gunicorn`.
+- Ensure the App Service startup command is set to use the `Procfile` (or explicitly set to `bash startup.sh` if needed).
+
 ## Known Issues
-- Many requirments from TBB are upheld
+- Many requirments from TBB are not upheld
 - OCR is not great at detecting text in images especailly the goverment warning
 - APIs are not encrypted
 
