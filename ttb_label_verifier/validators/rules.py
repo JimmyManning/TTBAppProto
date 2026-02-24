@@ -3,6 +3,7 @@
 import re
 from typing import Any
 
+from ttb_label_verifier.ocr import ocr_token_is_close
 from ttb_label_verifier.validators.parsing import (
     parse_age_years,
     parse_percentage_value,
@@ -19,12 +20,17 @@ from ttb_label_verifier.validators.text import (
 
 
 def verify_warning(raw_text: str, expected_warning: str) -> tuple[str, bool, float]:
-    """Validate government warning with exact text + uppercase header rules."""
+    """Validate government warning with token coverage + uppercase header rules."""
     expected = normalize_strict_spaces(expected_warning)
     raw = normalize_strict_spaces(raw_text)
-    contains_exact = expected in raw
-    has_uppercase_header = "GOVERNMENT WARNING:" in raw
-    passed = contains_exact and has_uppercase_header
+
+    expected_tokens = [token for token in normalize_loose(expected_warning).split() if token]
+    raw_tokens = [token for token in normalize_loose(raw_text).split() if token]
+    missing_tokens = [token for token in expected_tokens if not ocr_token_is_close(token, raw_tokens)]
+
+    has_uppercase_header = "GOVERNMENT" in raw and "WARNING:" in raw
+    all_expected_words_found = len(missing_tokens) == 0
+    passed = all_expected_words_found and has_uppercase_header
 
     if passed:
         return expected, True, 1.0
@@ -45,14 +51,17 @@ def verify_warning(raw_text: str, expected_warning: str) -> tuple[str, bool, flo
             best_line = normalize_strict_spaces(line)
 
     reasons: list[str] = []
-    if not contains_exact:
-        reasons.append("warning text is not an exact full-text match")
+    if not all_expected_words_found:
+        preview = ", ".join(missing_tokens[:10])
+        suffix = "..." if len(missing_tokens) > 10 else ""
+        reasons.append(f"missing expected warning words: {preview}{suffix}")
     if not has_uppercase_header:
         reasons.append("missing exact uppercase header 'GOVERNMENT WARNING:'")
 
     closest = best_line or "No close warning line found"
+    coverage = 0.0 if not expected_tokens else (len(expected_tokens) - len(missing_tokens)) / len(expected_tokens)
     detected = f"Closest: {closest} | Reason: {'; '.join(reasons)}"
-    return detected, False, max(best_score, 0.0)
+    return detected, False, max(best_score, coverage)
 
 
 def verify_alcohol_content(raw_text: str, expected_value: Any) -> tuple[str, bool, float]:

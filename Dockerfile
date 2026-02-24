@@ -2,7 +2,11 @@ FROM python:3.13-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1
+    PIP_NO_CACHE_DIR=1 \
+    OMP_THREAD_LIMIT=1 \
+    GUNICORN_TIMEOUT=180 \
+    GUNICORN_GRACEFUL_TIMEOUT=30 \
+    GUNICORN_WORKERS=1
 
 WORKDIR /app
 
@@ -18,4 +22,4 @@ COPY . .
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "gunicorn --bind=0.0.0.0:${PORT:-8000} app:app"]
+CMD ["sh", "-c", "gunicorn --bind=0.0.0.0:${PORT:-8000} --workers=${GUNICORN_WORKERS} --timeout=${GUNICORN_TIMEOUT} --graceful-timeout=${GUNICORN_GRACEFUL_TIMEOUT} app:app"]

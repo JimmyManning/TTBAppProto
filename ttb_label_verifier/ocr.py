@@ -1,7 +1,10 @@
 """OCR helper functions for uploaded label images."""
 
 import importlib
+import time
 from io import BytesIO
+
+from ttb_label_verifier.validators.text import similarity
 
 try:
     pytesseract = importlib.import_module("pytesseract")
@@ -22,6 +25,39 @@ except Exception:  # pragma: no cover
     UnidentifiedImageError = Exception
 
 _TESSERACT_READY: bool | None = None
+_MAX_DIMENSION = 1800
+_OCR_CALL_TIMEOUT_SECONDS = 8
+_OCR_QUICK_TIMEOUT_SECONDS = 4
+_OCR_TOTAL_BUDGET_SECONDS = 20
+_FAST_FIRST_PASS_MIN_ALNUM = 90
+
+
+def ocr_token_is_close(expected_token: str, observed_tokens: list[str]) -> bool:
+    """Return True when an OCR token reasonably matches the expected token.
+
+    This helper is designed for OCR noise tolerance (e.g. 0/O, 1/l, rn/m).
+    """
+    expected = (expected_token or "").strip().lower()
+    if not expected:
+        return True
+
+    tokens = [token.strip().lower() for token in (observed_tokens or []) if token and token.strip()]
+    token_set = set(tokens)
+
+    if expected in token_set:
+        return True
+
+    for token in tokens:
+        if token.startswith(expected) or expected.startswith(token):
+            if abs(len(token) - len(expected)) <= 2:
+                return True
+
+    threshold = 0.84 if len(expected) >= 6 else 0.9
+    for token in tokens:
+        if similarity(expected, token) >= threshold:
+            return True
+
+    return False
 
 
 def _score_ocr_text(text: str) -> int:
@@ -74,9 +110,33 @@ def _resample_filter(name: str):
     return getattr(Image, "BILINEAR", 2)
 
 
+def _should_try_invert(gray_image: Image.Image) -> bool:
+    """Return True when image appears dark with light text-like regions."""
+    try:
+        histogram = gray_image.histogram()
+        total = sum(histogram)
+        if total <= 0:
+            return False
+
+        mean_luma = sum(index * count for index, count in enumerate(histogram)) / float(total)
+        dark_ratio = sum(histogram[:86]) / float(total)
+        bright_ratio = sum(histogram[170:]) / float(total)
+
+        # Favor inversion for predominantly dark images that still contain bright strokes.
+        return mean_luma < 110 and dark_ratio >= 0.45 and bright_ratio >= 0.08
+    except Exception:
+        return False
+
+
 def _preprocess_variants(image: Image.Image) -> list[Image.Image]:
     """Build image variants to improve OCR recall across varied label photos."""
     base = _trim_borders(_exif_transpose_safe(image)).convert("RGB")
+    max_side = max(base.width, base.height)
+    if max_side > _MAX_DIMENSION:
+        scale = _MAX_DIMENSION / float(max_side)
+        lanczos = _resample_filter("LANCZOS")
+        base = base.resize((max(1, int(base.width * scale)), max(1, int(base.height * scale))), lanczos)
+
     base_gray = base.convert("L")
     denoised = base_gray.filter(ImageFilter.MedianFilter(size=3))
     auto = ImageOps.autocontrast(denoised)
@@ -87,14 +147,23 @@ def _preprocess_variants(image: Image.Image) -> list[Image.Image]:
 
     lanczos = _resample_filter("LANCZOS")
     nearest = _resample_filter("NEAREST")
-    resized_gray = enhanced.resize((enhanced.width * 2, enhanced.height * 2), lanczos)
-    resized_bw = thresholded_150.resize((thresholded_150.width * 2, thresholded_150.height * 2), nearest)
+    resized_gray = enhanced.resize((max(1, int(enhanced.width * 1.5)), max(1, int(enhanced.height * 1.5))), lanczos)
+    resized_bw = thresholded_150.resize((max(1, int(thresholded_150.width * 1.5)), max(1, int(thresholded_150.height * 1.5))), nearest)
+
+    inverted_variants: list[Image.Image] = []
+    if _should_try_invert(base_gray):
+        inv_gray = ImageOps.invert(base_gray)
+        inv_auto = ImageOps.autocontrast(inv_gray)
+        inv_enhanced = ImageEnhance.Contrast(inv_auto).enhance(2.0)
+        inv_thresholded = inv_enhanced.point(lambda p: 255 if p > 150 else 0)
+        inverted_variants = [inv_gray, inv_enhanced, inv_thresholded]
 
     # Order strongest/most useful variants first for faster early exits.
     variants = [
         base,
         enhanced,
         thresholded_150,
+        *inverted_variants,
         resized_gray,
         base_gray,
         denoised,
@@ -122,12 +191,18 @@ def _ocr_candidate(variant: Image.Image, config: str) -> tuple[str, float, int, 
     """Return OCR text, score, alnum count, and avg confidence for one run."""
     output = getattr(pytesseract, "Output", None)
     if output is None:
-        text = pytesseract.image_to_string(variant, lang="eng", config=config) or ""
+        text = pytesseract.image_to_string(variant, lang="eng", config=config, timeout=_OCR_CALL_TIMEOUT_SECONDS) or ""
         alnum = _score_ocr_text(text)
         return text, float(alnum), alnum, 0.0
 
     try:
-        data = pytesseract.image_to_data(variant, lang="eng", config=config, output_type=output.DICT)
+        data = pytesseract.image_to_data(
+            variant,
+            lang="eng",
+            config=config,
+            output_type=output.DICT,
+            timeout=_OCR_CALL_TIMEOUT_SECONDS,
+        )
     except Exception:
         return "", 0.0, 0, 0.0
 
@@ -149,6 +224,20 @@ def _ocr_candidate(variant: Image.Image, config: str) -> tuple[str, float, int, 
     return text, weighted_score, alnum, avg_conf
 
 
+def _quick_ocr_candidate(variant: Image.Image, config: str) -> tuple[str, int]:
+    """Run a faster OCR attempt without confidence extraction."""
+    try:
+        text = pytesseract.image_to_string(
+            variant,
+            lang="eng",
+            config=config,
+            timeout=_OCR_QUICK_TIMEOUT_SECONDS,
+        ) or ""
+    except Exception:
+        return "", 0
+    return text, _score_ocr_text(text)
+
+
 def _extract_best_text(image: Image.Image) -> str:
     """Run OCR with multiple variants/configs and return best-scoring text."""
     core_configs = [
@@ -159,9 +248,25 @@ def _extract_best_text(image: Image.Image) -> str:
     extended_configs = ["--oem 3 --psm 3"]
 
     variants = _preprocess_variants(image)
-    core_variants = variants[:4]
-    extended_variants = variants[4:10]
-    rotated_variants = variants[10:]
+    rotated_variants = variants[-3:] if len(variants) >= 3 else []
+    non_rotated_variants = variants[:-3] if len(variants) >= 3 else variants
+    core_variants = non_rotated_variants[:4]
+    extended_variants = non_rotated_variants[4:10]
+    started_at = time.monotonic()
+
+    # Fast first pass: quick string extraction on strongest variants.
+    fast_variants = core_variants[:2]
+    fast_configs = ["--oem 3 --psm 6", "--oem 3 --psm 11"]
+    fast_best_text = ""
+    fast_best_alnum = 0
+    for variant in fast_variants:
+        for config in fast_configs:
+            text, alnum = _quick_ocr_candidate(variant, config)
+            if alnum > fast_best_alnum:
+                fast_best_alnum = alnum
+                fast_best_text = text
+    if fast_best_alnum >= _FAST_FIRST_PASS_MIN_ALNUM:
+        return fast_best_text
 
     best_text = ""
     best_score = -1.0
@@ -170,6 +275,8 @@ def _extract_best_text(image: Image.Image) -> str:
 
     for variant in core_variants:
         for config in core_configs:
+            if time.monotonic() - started_at > _OCR_TOTAL_BUDGET_SECONDS:
+                return best_text
             text, score, alnum, avg_conf = _ocr_candidate(variant, config)
             if score > best_score:
                 best_score = score
@@ -183,6 +290,8 @@ def _extract_best_text(image: Image.Image) -> str:
 
     for variant in core_variants:
         for config in extended_configs:
+            if time.monotonic() - started_at > _OCR_TOTAL_BUDGET_SECONDS:
+                return best_text
             text, score, alnum, avg_conf = _ocr_candidate(variant, config)
             if score > best_score:
                 best_score = score
@@ -195,18 +304,23 @@ def _extract_best_text(image: Image.Image) -> str:
 
     for variant in extended_variants:
         for config in core_configs:
+            if time.monotonic() - started_at > _OCR_TOTAL_BUDGET_SECONDS:
+                return best_text
             text, score, _alnum, _avg_conf = _ocr_candidate(variant, config)
             if score > best_score:
                 best_score = score
                 best_text = text
 
-    # Rotated passes are expensive; only use one robust config here.
-    for variant in rotated_variants:
-        for config in extended_configs:
-            text, score, _alnum, _avg_conf = _ocr_candidate(variant, config)
-            if score > best_score:
-                best_score = score
-                best_text = text
+    # Rotated passes are very expensive; only run when text quality is still weak.
+    if best_avg_conf < 45.0 and best_alnum < 80:
+        for variant in rotated_variants:
+            for config in extended_configs:
+                if time.monotonic() - started_at > _OCR_TOTAL_BUDGET_SECONDS:
+                    return best_text
+                text, score, _alnum, _avg_conf = _ocr_candidate(variant, config)
+                if score > best_score:
+                    best_score = score
+                    best_text = text
 
     return best_text
 
