@@ -132,7 +132,7 @@ If Tesseract is unavailable, OCR endpoints return HTTP `503`.
 Azure deployment strategy:
 
 - Build a Docker image from [Dockerfile](Dockerfile) (includes `tesseract-ocr`).
-- Push image to Azure Container Registry (ACR).
+- Build and push image from GitHub runner to Azure Container Registry (ACR) (no ACR Tasks dependency).
 - Configure Azure Web App to run that container image.
 
 Required GitHub secrets for container deploy workflow:

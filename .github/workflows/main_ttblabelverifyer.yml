@@ -69,8 +69,14 @@ jobs:
           fi
 
           az account show --query "{subscriptionId:id,name:name}" -o table
-          az acr show --name "$ACR_NAME" --resource-group "$RG" --query "{name:name,loginServer:loginServer,resourceGroup:resourceGroup}" -o table
-          az acr build --registry "$ACR_NAME" --resource-group "$RG" --image "$IMAGE_NAME:$IMAGE_TAG" .
+          ACR_LOGIN_SERVER=$(az acr show --name "$ACR_NAME" --resource-group "$RG" --query loginServer -o tsv)
+
+          # Use local Docker build+push (not ACR Tasks) to avoid TasksOperationsNotAllowed.
+          ACR_TOKEN=$(az acr login --name "$ACR_NAME" --expose-token --output tsv --query accessToken)
+          docker login "$ACR_LOGIN_SERVER" --username 00000000-0000-0000-0000-000000000000 --password "$ACR_TOKEN"
+
+          docker build -t "$ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG" .
+          docker push "$ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG"
 
       - name: Configure Web App to use image
         env:
