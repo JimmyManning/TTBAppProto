@@ -1,7 +1,7 @@
 # Alcohol Label Verification Prototype
 
-[![CI](https://github.com/JimmyManning/TBBAppProto/actions/workflows/ci.yml/badge.svg)](https://github.com/JimmyManning/TBBAppProto/actions/workflows/ci.yml)
-[![Azure Deploy](https://github.com/JimmyManning/TBBAppProto/actions/workflows/main_ttblabelverifyer.yml/badge.svg)](https://github.com/JimmyManning/TBBAppProto/actions/workflows/main_ttblabelverifyer.yml)
+[![CI](https://github.com/JimmyManning/TTBAppProto/actions/workflows/ci.yml/badge.svg)](https://github.com/JimmyManning/TTBAppProto/actions/workflows/ci.yml)
+[![Azure Deploy](https://github.com/JimmyManning/TTBAppProto/actions/workflows/main_ttblabelverifyer.yml/badge.svg)](https://github.com/JimmyManning/TTBAppProto/actions/workflows/main_ttblabelverifyer.yml)
 
 Standalone Flask prototype for OCR-assisted alcohol label verification.
 
@@ -56,15 +56,38 @@ Validated fields:
 
 App runs at `http://127.0.0.1:5001`.
 
+## Run with Docker image
+
+Build image:
+
+- `docker build -t ttbverifyer:local .`
+
+Run container:
+
+- `docker run --rm -p 8000:8000 ttbverifyer:local`
+
+Open:
+
+- `http://127.0.0.1:8000`
+- `http://127.0.0.1:8000/health`
+
+Notes:
+
+- The image includes `tesseract-ocr` and Python dependencies.
+- Container listens on `8000` (`Dockerfile` uses `gunicorn --bind=0.0.0.0:${PORT:-8000}`).
+- In Azure Web App for Containers, set `WEBSITES_PORT=8000`.
+
+Optional push to ACR (manual):
+
+- `docker tag ttbverifyer:local <acr-login-server>/ttblabelverifyer:<tag>`
+- `docker push <acr-login-server>/ttblabelverifyer:<tag>`
+
 ## Validation and test commands
 
 - `make check` (lint + Python tests)
 - `make lint`
 - `make test`
 
-Optional frontend behavior tests (Node 18+):
-
-- `node --test tests/frontend/form.behavior.test.mjs`
 
 Covered frontend behaviors:
 
@@ -145,7 +168,7 @@ Required GitHub secrets for container deploy workflow:
 - `AZURE_ACR_RESOURCE_GROUP` (optional; needed if ACR is in a different resource group)
 
 ## Known Issues
-- Many requirments from TBB are not upheld
+- Many requirments from TTB are not upheld
 - OCR is not great at detecting text in images especailly the goverment warning
 - APIs are not encrypted
 
@@ -153,5 +176,5 @@ Required GitHub secrets for container deploy workflow:
 - Integrating custom tensorflow model could improve OCR accuracy and speed.
 - Autehtication and privlege management and integration into user manamegent server.
 - Move tsv to database so rules and data can be managed easier there.
-- MCP server to pull requirments from TBB database would allow independant agents to implement and validate complete requirments. 
+- MCP server to pull requirments from TTB database would allow independant agents to implement and validate complete requirments. 
 - Client facing app to validate before submitting could help breweries / distileries make sure their labels follow the requirments. 

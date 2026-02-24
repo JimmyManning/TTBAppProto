@@ -108,7 +108,7 @@ sequenceDiagram
 ## 5) Validation behavior (current)
 
 - Fuzzy matching for standard text fields.
-- Strict backend warning validation for the government warning text and uppercase header.
+- Government warning validation enforces uppercase header and full warning word coverage with OCR-tolerant close-token matching.
 - Alcohol validation requires `%` + `alc/alcohol` + `by|/` + `vol/volume`; `ABV` is rejected.
 - If proof appears, proof consistency is enforced with $\text{proof} = 2 \times \text{ABV}$.
 - Origin validation is skipped when expected origin is U.S./U.S. alias/state.
@@ -135,4 +135,4 @@ sequenceDiagram
 - OCR requires system Tesseract. If unavailable, OCR endpoints return `503`.
 - Batch processing is synchronous/sequential.
 - CI workflow: `.github/workflows/ci.yml`
-- Azure deploy workflow: `.github/workflows/deploy-azure.yml`
+- Azure deploy workflow: `.github/workflows/main_ttblabelverifyer.yml`
