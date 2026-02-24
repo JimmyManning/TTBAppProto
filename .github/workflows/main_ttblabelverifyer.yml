@@ -75,17 +75,6 @@ jobs:
           docker build -t "$ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG" .
           docker push "$ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG"
 
-          PUSHED_DIGEST=$(az acr repository show-manifests \
-            --name "$ACR_NAME" \
-            --repository "$IMAGE_NAME" \
-            --query "[?contains(tags, '$IMAGE_TAG')].digest | [0]" \
-            -o tsv)
-
-          if [[ -z "${PUSHED_DIGEST:-}" ]]; then
-            echo "Image tag not found in ACR after push: $ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG"
-            exit 1
-          fi
-
       - name: Configure Web App to use image
         env:
           RESOURCE_GROUP: ${{ secrets.AZURE_RESOURCE_GROUP }}
@@ -97,35 +86,10 @@ jobs:
         run: |
           ACR_RG="${ACR_RESOURCE_GROUP:-$RESOURCE_GROUP}"
           ACR_LOGIN_SERVER=$(az acr show -n "$ACR_NAME" -g "$ACR_RG" --query loginServer -o tsv)
-          ACR_ID=$(az acr show -n "$ACR_NAME" -g "$ACR_RG" --query id -o tsv)
 
           az webapp identity assign \
             --name "$WEBAPP_NAME" \
             --resource-group "$RESOURCE_GROUP" >/dev/null
-
-          WEBAPP_PRINCIPAL_ID=$(az webapp identity show \
-            --name "$WEBAPP_NAME" \
-            --resource-group "$RESOURCE_GROUP" \
-            --query principalId -o tsv)
-
-          if [[ -z "${WEBAPP_PRINCIPAL_ID:-}" ]]; then
-            echo "Unable to resolve Web App managed identity principalId"
-            exit 1
-          fi
-
-          HAS_ACR_PULL=$(az role assignment list \
-            --assignee-object-id "$WEBAPP_PRINCIPAL_ID" \
-            --scope "$ACR_ID" \
-            --query "[?roleDefinitionName=='AcrPull'] | length(@)" \
-            -o tsv)
-
-          if [[ "${HAS_ACR_PULL:-0}" == "0" ]]; then
-            az role assignment create \
-              --assignee-object-id "$WEBAPP_PRINCIPAL_ID" \
-              --assignee-principal-type ServicePrincipal \
-              --role AcrPull \
-              --scope "$ACR_ID"
-          fi
 
           az webapp config container set \
             --name "$WEBAPP_NAME" \
