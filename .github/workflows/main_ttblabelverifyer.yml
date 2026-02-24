@@ -52,22 +52,39 @@ jobs:
       - name: Build and push image to ACR
         env:
           ACR_NAME: ${{ secrets.AZURE_ACR_NAME }}
+          ACR_RESOURCE_GROUP: ${{ secrets.AZURE_ACR_RESOURCE_GROUP }}
+          WEBAPP_RESOURCE_GROUP: ${{ secrets.AZURE_RESOURCE_GROUP }}
           IMAGE_NAME: ttblabelverifyer
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          az acr build --registry "$ACR_NAME" --image "$IMAGE_NAME:$IMAGE_TAG" .
+          if [[ -z "${ACR_NAME:-}" ]]; then
+            echo "AZURE_ACR_NAME secret is missing"
+            exit 1
+          fi
+
+          RG="${ACR_RESOURCE_GROUP:-$WEBAPP_RESOURCE_GROUP}"
+          if [[ -z "${RG:-}" ]]; then
+            echo "Set AZURE_ACR_RESOURCE_GROUP or AZURE_RESOURCE_GROUP"
+            exit 1
+          fi
+
+          az account show --query "{subscriptionId:id,name:name}" -o table
+          az acr show --name "$ACR_NAME" --resource-group "$RG" --query "{name:name,loginServer:loginServer,resourceGroup:resourceGroup}" -o table
+          az acr build --registry "$ACR_NAME" --resource-group "$RG" --image "$IMAGE_NAME:$IMAGE_TAG" .
 
       - name: Configure Web App to use image
         env:
           RESOURCE_GROUP: ${{ secrets.AZURE_RESOURCE_GROUP }}
+          ACR_RESOURCE_GROUP: ${{ secrets.AZURE_ACR_RESOURCE_GROUP }}
           WEBAPP_NAME: ttblabelverifyer
           ACR_NAME: ${{ secrets.AZURE_ACR_NAME }}
           IMAGE_NAME: ttblabelverifyer
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          ACR_LOGIN_SERVER=$(az acr show -n "$ACR_NAME" --query loginServer -o tsv)
-          ACR_USERNAME=$(az acr credential show -n "$ACR_NAME" --query username -o tsv)
-          ACR_PASSWORD=$(az acr credential show -n "$ACR_NAME" --query "passwords[0].value" -o tsv)
+          ACR_RG="${ACR_RESOURCE_GROUP:-$RESOURCE_GROUP}"
+          ACR_LOGIN_SERVER=$(az acr show -n "$ACR_NAME" -g "$ACR_RG" --query loginServer -o tsv)
+          ACR_USERNAME=$(az acr credential show -n "$ACR_NAME" -g "$ACR_RG" --query username -o tsv)
+          ACR_PASSWORD=$(az acr credential show -n "$ACR_NAME" -g "$ACR_RG" --query "passwords[0].value" -o tsv)
 
           az webapp config container set \
             --name "$WEBAPP_NAME" \

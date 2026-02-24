@@ -142,6 +142,7 @@ Required GitHub secrets for container deploy workflow:
 - `AZUREAPPSERVICE_SUBSCRIPTIONID_5C18393017824C0994DC52BD46394808`
 - `AZURE_ACR_NAME`
 - `AZURE_RESOURCE_GROUP`
+- `AZURE_ACR_RESOURCE_GROUP` (optional; needed if ACR is in a different resource group)
 
 ## Known Issues
 - Many requirments from TBB are not upheld
