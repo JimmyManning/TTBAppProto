@@ -152,5 +152,6 @@ Required GitHub secrets for container deploy workflow:
 ## Improvements
 - Integrating custom tensorflow model could improve OCR accuracy and speed.
 - Autehtication and privlege management and integration into user manamegent server.
+- Move tsv to database so rules and data can be managed easier there.
 - MCP server to pull requirments from TBB database would allow independant agents to implement and validate complete requirments. 
 - Client facing app to validate before submitting could help breweries / distileries make sure their labels follow the requirments. 

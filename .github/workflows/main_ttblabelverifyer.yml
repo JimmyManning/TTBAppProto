@@ -68,10 +68,7 @@ jobs:
             exit 1
           fi
 
-          az account show --query "{subscriptionId:id,name:name}" -o table
           ACR_LOGIN_SERVER=$(az acr show --name "$ACR_NAME" --resource-group "$RG" --query loginServer -o tsv)
-
-          # Use local Docker build+push (not ACR Tasks) to avoid TasksOperationsNotAllowed.
           ACR_TOKEN=$(az acr login --name "$ACR_NAME" --expose-token --output tsv --query accessToken)
           docker login "$ACR_LOGIN_SERVER" --username 00000000-0000-0000-0000-000000000000 --password "$ACR_TOKEN"
 
@@ -89,16 +86,20 @@ jobs:
         run: |
           ACR_RG="${ACR_RESOURCE_GROUP:-$RESOURCE_GROUP}"
           ACR_LOGIN_SERVER=$(az acr show -n "$ACR_NAME" -g "$ACR_RG" --query loginServer -o tsv)
-          ACR_USERNAME=$(az acr credential show -n "$ACR_NAME" -g "$ACR_RG" --query username -o tsv)
-          ACR_PASSWORD=$(az acr credential show -n "$ACR_NAME" -g "$ACR_RG" --query "passwords[0].value" -o tsv)
+          az webapp identity assign \
+            --name "$WEBAPP_NAME" \
+            --resource-group "$RESOURCE_GROUP" >/dev/null
 
           az webapp config container set \
             --name "$WEBAPP_NAME" \
             --resource-group "$RESOURCE_GROUP" \
             --container-image-name "$ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG" \
-            --container-registry-url "https://$ACR_LOGIN_SERVER" \
-            --container-registry-user "$ACR_USERNAME" \
-            --container-registry-password "$ACR_PASSWORD"
+            --container-registry-url "https://$ACR_LOGIN_SERVER"
+
+          az webapp config set \
+            --name "$WEBAPP_NAME" \
+            --resource-group "$RESOURCE_GROUP" \
+            --generic-configurations '{"acrUseManagedIdentityCreds": true}'
 
           az webapp config appsettings set \
             --name "$WEBAPP_NAME" \
