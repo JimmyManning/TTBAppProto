@@ -26,10 +26,11 @@ except Exception:  # pragma: no cover
     UnidentifiedImageError = Exception
 
 _TESSERACT_READY: bool | None = None
+_ENG_LANG_READY: bool | None = None
 _MAX_DIMENSION = 1800
-_OCR_CALL_TIMEOUT_SECONDS = int(os.getenv("OCR_CALL_TIMEOUT_SECONDS", "8"))
-_OCR_QUICK_TIMEOUT_SECONDS = int(os.getenv("OCR_QUICK_TIMEOUT_SECONDS", "4"))
-_OCR_TOTAL_BUDGET_SECONDS = int(os.getenv("OCR_TOTAL_BUDGET_SECONDS", "20"))
+_OCR_CALL_TIMEOUT_SECONDS = int(os.getenv("OCR_CALL_TIMEOUT_SECONDS", "12"))
+_OCR_QUICK_TIMEOUT_SECONDS = int(os.getenv("OCR_QUICK_TIMEOUT_SECONDS", "6"))
+_OCR_TOTAL_BUDGET_SECONDS = int(os.getenv("OCR_TOTAL_BUDGET_SECONDS", "35"))
 _FAST_FIRST_PASS_MIN_ALNUM = 90
 
 
@@ -344,8 +345,23 @@ def _extract_best_text(image: Image.Image) -> str:
                     best_score = score
                     best_text = text
 
-    return best_text
+    if (best_text or "").strip():
+        return best_text
 
+    # Final fallback: try original image with broad page segmentation.
+    try:
+        fallback_text = pytesseract.image_to_string(
+            image,
+            lang="eng",
+            config="--oem 3 --psm 3",
+            timeout=max(_OCR_CALL_TIMEOUT_SECONDS, 15),
+        )
+    except Exception as exc:
+        if _is_fatal_tesseract_error(exc):
+            raise
+        return ""
+
+    return fallback_text or ""
 
 def ocr_image_file(file_storage) -> tuple[str | None, str | None]:
     """Extract text from an uploaded image file.
@@ -359,7 +375,7 @@ def ocr_image_file(file_storage) -> tuple[str | None, str | None]:
     if pytesseract is None or Image is None or ImageEnhance is None or ImageFilter is None or ImageOps is None:
         return None, "OCR dependencies not installed. Install pillow and pytesseract."
 
-    global _TESSERACT_READY
+    global _TESSERACT_READY, _ENG_LANG_READY
     if _TESSERACT_READY is None:
         try:
             _ = pytesseract.get_tesseract_version()
@@ -368,6 +384,16 @@ def ocr_image_file(file_storage) -> tuple[str | None, str | None]:
             _TESSERACT_READY = False
     if not _TESSERACT_READY:
         return None, "Tesseract binary not found. Install Tesseract OCR on the host."
+
+    if _ENG_LANG_READY is None:
+        try:
+            langs = {lang.strip().lower() for lang in pytesseract.get_languages(config="")}
+            _ENG_LANG_READY = "eng" in langs
+        except Exception:
+            _ENG_LANG_READY = False
+
+    if not _ENG_LANG_READY:
+        return None, "Tesseract English language data (eng.traineddata) is missing on the host."
 
     if not file_storage:
         return None, "No image file provided"
