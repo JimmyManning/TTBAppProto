@@ -1,6 +1,7 @@
 """OCR helper functions for uploaded label images."""
 
 import importlib
+import os
 import time
 from io import BytesIO
 
@@ -26,10 +27,22 @@ except Exception:  # pragma: no cover
 
 _TESSERACT_READY: bool | None = None
 _MAX_DIMENSION = 1800
-_OCR_CALL_TIMEOUT_SECONDS = 8
-_OCR_QUICK_TIMEOUT_SECONDS = 4
-_OCR_TOTAL_BUDGET_SECONDS = 20
+_OCR_CALL_TIMEOUT_SECONDS = int(os.getenv("OCR_CALL_TIMEOUT_SECONDS", "8"))
+_OCR_QUICK_TIMEOUT_SECONDS = int(os.getenv("OCR_QUICK_TIMEOUT_SECONDS", "4"))
+_OCR_TOTAL_BUDGET_SECONDS = int(os.getenv("OCR_TOTAL_BUDGET_SECONDS", "20"))
 _FAST_FIRST_PASS_MIN_ALNUM = 90
+
+
+def _is_fatal_tesseract_error(exc: Exception) -> bool:
+    """Return True for non-recoverable OCR runtime/config errors."""
+    message = str(exc).lower()
+    fatal_markers = (
+        "error opening data file",
+        "failed loading language",
+        "tesseract couldn't load",
+        "failed to init api",
+    )
+    return any(marker in message for marker in fatal_markers)
 
 
 def ocr_token_is_close(expected_token: str, observed_tokens: list[str]) -> bool:
@@ -191,7 +204,12 @@ def _ocr_candidate(variant: Image.Image, config: str) -> tuple[str, float, int, 
     """Return OCR text, score, alnum count, and avg confidence for one run."""
     output = getattr(pytesseract, "Output", None)
     if output is None:
-        text = pytesseract.image_to_string(variant, lang="eng", config=config, timeout=_OCR_CALL_TIMEOUT_SECONDS) or ""
+        try:
+            text = pytesseract.image_to_string(variant, lang="eng", config=config, timeout=_OCR_CALL_TIMEOUT_SECONDS) or ""
+        except Exception as exc:
+            if _is_fatal_tesseract_error(exc):
+                raise
+            return "", 0.0, 0, 0.0
         alnum = _score_ocr_text(text)
         return text, float(alnum), alnum, 0.0
 
@@ -203,7 +221,9 @@ def _ocr_candidate(variant: Image.Image, config: str) -> tuple[str, float, int, 
             output_type=output.DICT,
             timeout=_OCR_CALL_TIMEOUT_SECONDS,
         )
-    except Exception:
+    except Exception as exc:
+        if _is_fatal_tesseract_error(exc):
+            raise
         return "", 0.0, 0, 0.0
 
     words = []
@@ -233,7 +253,9 @@ def _quick_ocr_candidate(variant: Image.Image, config: str) -> tuple[str, int]:
             config=config,
             timeout=_OCR_QUICK_TIMEOUT_SECONDS,
         ) or ""
-    except Exception:
+    except Exception as exc:
+        if _is_fatal_tesseract_error(exc):
+            raise
         return "", 0
     return text, _score_ocr_text(text)
 
