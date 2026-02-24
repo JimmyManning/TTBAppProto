@@ -27,7 +27,7 @@ except Exception:  # pragma: no cover
 
 _TESSERACT_READY: bool | None = None
 _ENG_LANG_READY: bool | None = None
-_MAX_DIMENSION = 1800
+_MAX_DIMENSION = int(os.getenv("OCR_MAX_DIMENSION", "2400"))
 _OCR_CALL_TIMEOUT_SECONDS = int(os.getenv("OCR_CALL_TIMEOUT_SECONDS", "12"))
 _OCR_QUICK_TIMEOUT_SECONDS = int(os.getenv("OCR_QUICK_TIMEOUT_SECONDS", "6"))
 _OCR_TOTAL_BUDGET_SECONDS = int(os.getenv("OCR_TOTAL_BUDGET_SECONDS", "35"))
@@ -201,12 +201,39 @@ def _safe_conf_to_int(value: str) -> int:
         return -1
 
 
+def _merge_candidate_texts(primary_text: str, candidates: list[tuple[float, str]]) -> str:
+    """Merge top OCR candidates to improve field recall across noisy runs."""
+    seen: set[str] = set()
+    merged_lines: list[str] = []
+
+    def add_lines(text: str):
+        for line in (text or "").splitlines():
+            normalized = " ".join(line.split()).strip()
+            if len(normalized) < 2:
+                continue
+            key = normalized.lower()
+            if key in seen:
+                continue
+            seen.add(key)
+            merged_lines.append(normalized)
+
+    add_lines(primary_text)
+    for _score, text in candidates:
+        add_lines(text)
+        if len(merged_lines) >= 180:
+            break
+
+    return "\n".join(merged_lines)
+
+
 def _ocr_candidate(variant: Image.Image, config: str) -> tuple[str, float, int, float]:
     """Return OCR text, score, alnum count, and avg confidence for one run."""
+    runtime_config = f"{config} -c preserve_interword_spaces=1"
+
     output = getattr(pytesseract, "Output", None)
     if output is None:
         try:
-            text = pytesseract.image_to_string(variant, lang="eng", config=config, timeout=_OCR_CALL_TIMEOUT_SECONDS) or ""
+            text = pytesseract.image_to_string(variant, lang="eng", config=runtime_config, timeout=_OCR_CALL_TIMEOUT_SECONDS) or ""
         except Exception as exc:
             if _is_fatal_tesseract_error(exc):
                 raise
@@ -218,7 +245,7 @@ def _ocr_candidate(variant: Image.Image, config: str) -> tuple[str, float, int, 
         data = pytesseract.image_to_data(
             variant,
             lang="eng",
-            config=config,
+            config=runtime_config,
             output_type=output.DICT,
             timeout=_OCR_CALL_TIMEOUT_SECONDS,
         )
@@ -247,11 +274,12 @@ def _ocr_candidate(variant: Image.Image, config: str) -> tuple[str, float, int, 
 
 def _quick_ocr_candidate(variant: Image.Image, config: str) -> tuple[str, int]:
     """Run a faster OCR attempt without confidence extraction."""
+    runtime_config = f"{config} -c preserve_interword_spaces=1"
     try:
         text = pytesseract.image_to_string(
             variant,
             lang="eng",
-            config=config,
+            config=runtime_config,
             timeout=_OCR_QUICK_TIMEOUT_SECONDS,
         ) or ""
     except Exception as exc:
@@ -264,11 +292,11 @@ def _quick_ocr_candidate(variant: Image.Image, config: str) -> tuple[str, int]:
 def _extract_best_text(image: Image.Image) -> str:
     """Run OCR with multiple variants/configs and return best-scoring text."""
     core_configs = [
-        "--oem 3 --psm 6",
-        "--oem 3 --psm 11",
-        "--oem 3 --psm 4",
+        "--oem 3 --psm 6 --dpi 300",
+        "--oem 3 --psm 11 --dpi 300",
+        "--oem 3 --psm 4 --dpi 300",
     ]
-    extended_configs = ["--oem 3 --psm 3"]
+    extended_configs = ["--oem 3 --psm 3 --dpi 300", "--oem 3 --psm 12 --dpi 300"]
 
     variants = _preprocess_variants(image)
     rotated_variants = variants[-3:] if len(variants) >= 3 else []
@@ -295,12 +323,24 @@ def _extract_best_text(image: Image.Image) -> str:
     best_score = -1.0
     best_alnum = 0
     best_avg_conf = 0.0
+    top_candidates: list[tuple[float, str]] = []
+
+    def track_candidate(text: str, score: float):
+        normalized = (text or "").strip()
+        if not normalized:
+            return
+        top_candidates.append((score, normalized))
+        top_candidates.sort(key=lambda item: item[0], reverse=True)
+        # Keep a few highest-scoring candidates.
+        if len(top_candidates) > 5:
+            del top_candidates[5:]
 
     for variant in core_variants:
         for config in core_configs:
             if time.monotonic() - started_at > _OCR_TOTAL_BUDGET_SECONDS:
                 return best_text
             text, score, alnum, avg_conf = _ocr_candidate(variant, config)
+            track_candidate(text, score)
             if score > best_score:
                 best_score = score
                 best_text = text
@@ -316,6 +356,7 @@ def _extract_best_text(image: Image.Image) -> str:
             if time.monotonic() - started_at > _OCR_TOTAL_BUDGET_SECONDS:
                 return best_text
             text, score, alnum, avg_conf = _ocr_candidate(variant, config)
+            track_candidate(text, score)
             if score > best_score:
                 best_score = score
                 best_text = text
@@ -330,6 +371,7 @@ def _extract_best_text(image: Image.Image) -> str:
             if time.monotonic() - started_at > _OCR_TOTAL_BUDGET_SECONDS:
                 return best_text
             text, score, _alnum, _avg_conf = _ocr_candidate(variant, config)
+            track_candidate(text, score)
             if score > best_score:
                 best_score = score
                 best_text = text
@@ -341,19 +383,20 @@ def _extract_best_text(image: Image.Image) -> str:
                 if time.monotonic() - started_at > _OCR_TOTAL_BUDGET_SECONDS:
                     return best_text
                 text, score, _alnum, _avg_conf = _ocr_candidate(variant, config)
+                track_candidate(text, score)
                 if score > best_score:
                     best_score = score
                     best_text = text
 
     if (best_text or "").strip():
-        return best_text
+        return _merge_candidate_texts(best_text, top_candidates)
 
     # Final fallback: try original image with broad page segmentation.
     try:
         fallback_text = pytesseract.image_to_string(
             image,
             lang="eng",
-            config="--oem 3 --psm 3",
+            config="--oem 3 --psm 3 --dpi 300 -c preserve_interword_spaces=1",
             timeout=max(_OCR_CALL_TIMEOUT_SECONDS, 15),
         )
     except Exception as exc:

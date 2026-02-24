@@ -105,7 +105,12 @@ jobs:
           az webapp config appsettings set \
             --name "$WEBAPP_NAME" \
             --resource-group "$RESOURCE_GROUP" \
-            --settings WEBSITES_PORT=8000
+            --settings \
+              WEBSITES_PORT=8000 \
+              OCR_MAX_DIMENSION=2800 \
+              OCR_CALL_TIMEOUT_SECONDS=14 \
+              OCR_QUICK_TIMEOUT_SECONDS=7 \
+              OCR_TOTAL_BUDGET_SECONDS=45
 
       - name: Restart Web App
         env:
